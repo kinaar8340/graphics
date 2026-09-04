@@ -8,7 +8,8 @@
 **Subtitle:** a 3D CRT  
 **Type (not a repo):** `qga_pixel`
 
-This checkout is `~/Projects/graphics` until the directory is renamed `shellscan`. Do not create `~/Projects/qga_pixel`. The crate name in `Cargo.toml` is `shellscan`.
+Remote: [github.com/kinaar8340/graphics](https://github.com/kinaar8340/graphics).  
+The checkout **should** be `~/Projects/shellscan`. This tree is still `~/Projects/graphics` until the directory is renamed. Do not create a second repo. `qga_pixel` is the type, not a repo. Crate name: `shellscan`.
 
 A CRT writes a glowing surface by sweeping a beam in two fields. This crate writes a glowing shell by lifting a chart through inverse-Hopf in two clocks. The pixel is a local plane-cut of the observer’s double cone. Color is a conic type, not an RGB triple. The shell is a trajectoid, so the screen has an identity and a trench, not a rectangle.
 
@@ -22,10 +23,10 @@ This is a **Model** and a **Software fact**. It is not a vacuum tube and not a t
 - [x] Phase 1 — 32-byte `qga_pixel` (section, Hopf address, field bit, RGB preview)
 - [x] Phase 2 — two-clock CPU write + persistence tests
 - [x] Phase 3 — offline trench bind; headless 8-frame; then a `demo-tiny`-scale window
-- [ ] Phase 4 — testimony stills
+- [ ] Phase 4 — testimony stills (clock states, not flux kinds)
 - [ ] Phase 5 — optional SLM / photonic sibling
 
-Phase 3: `pos` means on the faceplate. No `flux_trajectoid` runtime, no `inner_cone` path-dep, no 65k ocean, no live loom, no fourth vertex format.
+Phase 3 shipped: `pos = γ(shell_s)`. Phase 4 is a camera script. See [docs/TESTIMONY.md](docs/TESTIMONY.md).
 
 ## `qga_pixel`
 
@@ -50,7 +51,9 @@ Odd field → visual cone (`+Z`). Even field → feeling cone (`+Y`). Separator 
 ```
 make test          # CPU: record, clocks, trench bind
 make headless      # 8 frames, 4k elliptic, static_uploads == 1
-make demo          # demo-tiny-scale window; live_every = 30; gun off
+make demo          # demo-tiny-scale window; live_every = 30; gun off; HUD on
+make stills        # five 1280×720 PNGs, no HUD, glow off
+make testimony     # stills + 30s orbit of 03_both
 ```
 
 Sidecar (once, not in the frame loop):
@@ -72,6 +75,7 @@ Sibling checkouts:
 
 | Repo | Role |
 |---|---|
+| [graphics](https://github.com/kinaar8340/graphics) | this crate (Phosphor Loom / `shellscan`) |
 | [qga](https://github.com/kinaar8340/qga) | manuscript |
 | [qga_engine](https://github.com/kinaar8340/qga_engine) | math / sim |
 | [qga_gpu](https://github.com/kinaar8340/qga_gpu) | frame |

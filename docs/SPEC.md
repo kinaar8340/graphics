@@ -51,10 +51,10 @@ Drop: rectangular raster as ontology, three independent guns, progressive “mor
 0. This page.  
 1. `qga_pixel` 32-byte record. Encode section, Hopf address, field bit. Project RGB for the witness camera. **No scene.**  
 2. Two-clock write. Clock 0 static / even / feeling. Clock 1 live / odd / visual. Persistence difference must be measurable.  
-3. Bind a trajectoid shell as the only phosphor (offline mesh). 4k motes. Elliptic only.  
-4. `make testimony`: four stills + looping MP4.  
+3. **Shipped.** Bind + window. Offline trench, 4k elliptic, `pos = γ(shell_s)`. Headless 8-frame: `SU=1`, `LF=0`, `PS=0`, `even=1347.844`, `odd=1872.004`, `both=3219.883`. `demo-tiny`-scale window. Gun off.  
+4. Testimony stills. Five locked-eye PNGs + 30s orbit of `03_both`. Clock states, not flux kinds. No HUD, no `G`. See [TESTIMONY.md](TESTIMONY.md).  
 5. Optional SLM / `vqc_demo` photonic sibling.
 
-## First scene (Phase 3)
+## First scene (Phase 3, shipped)
 
 One window. No mosaic. One observer. Two cones. One separator. One shell. 4k elliptic motes on `γ(s)`. Two clocks (interlace every frame; `live_every = 30`; gun off). HUD: field bit, `ELLIPTIC`, `SU` / `LF` / `PS`. Orbit camera only. `static_uploads == 1`.
