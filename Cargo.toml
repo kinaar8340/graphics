@@ -1,0 +1,29 @@
+[package]
+name = "shellscan"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+authors = ["kinaar8340"]
+description = "Phosphor Loom — The Realism Interface (a 3D CRT). qga_pixel + two-clock write. qga-gpu owns the frame."
+repository = "https://github.com/kinaar8340/shellscan"
+readme = "README.md"
+
+[dependencies]
+# Thin scene crate. Do not path-dep inner_cone or flux_trajectoid.
+# Do not enable qga-gpu/qga-math — no fiber conversion in this crate.
+qga-math = { path = "../qga_engine/crates/qga-math" }
+qga-gpu = { path = "../qga_gpu/crates/qga-gpu", features = ["winit", "headless", "capture", "glow"] }
+glam = "0.29"
+bytemuck = { version = "1.22", features = ["derive"] }
+anyhow = "1.0"
+log = "0.4"
+env_logger = { version = "0.11", default-features = false, features = ["auto-color"] }
+winit = { version = "0.30", default-features = false, features = ["rwh_06", "wayland", "wayland-dlopen", "x11"] }
+
+[lib]
+name = "shellscan"
+path = "src/lib.rs"
+
+[[bin]]
+name = "shellscan"
+path = "src/bin/shellscan.rs"

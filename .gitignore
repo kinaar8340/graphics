@@ -1,0 +1,13 @@
+/target
+/output/png/*.png
+/output/mp4/*.mp4
+__pycache__/
+*.pyc
+*.log
+**/*.rs.bk
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+.env
