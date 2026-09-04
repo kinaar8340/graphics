@@ -1,6 +1,6 @@
 //! Offline faceplate. Software fact of the byte layout, not a Python runtime.
 //!
-//! `γ(s)` is the contact trench. Bound `pos = γ(shell_s)`.
+//! `γ(s)` is the contact trench. Bound `pos = γ(s) + ε â` (rail).
 
 use anyhow::{bail, Context, Result};
 use glam::Vec3;
@@ -15,6 +15,9 @@ pub const N_MOTES: usize = 4096;
 /// 4096 even/odd is occupancy in the record and one stroke in the picture.
 /// 256 sites (128+128) is dense enough to be a trench and sparse enough to dash.
 pub const N_OCCUPANCY: usize = 256;
+/// Rail offset as a fraction of shell radius (R ≈ 1). Field 0 along ŷ, field 1 along ẑ.
+/// One number. World cone axes, not the camera frame.
+pub const RAIL_EPS: f32 = 0.02;
 
 /// Contact trench + dim shell skin. Faces are the envelope, not a second phosphor.
 #[derive(Clone, Debug)]

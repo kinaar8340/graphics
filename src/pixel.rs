@@ -101,9 +101,10 @@ impl QgaPixel {
         stereographic(self.hopf_q(), 1.0)
     }
 
-    /// Bound faceplate position `γ(shell_s)`. Leaves Hopf fields alone.
+    /// Bound faceplate position. Occupancy site on γ, plus one rail:
+    /// field 0 → γ + ε ŷ, field 1 → γ + ε ẑ. Hopf fields unchanged.
     pub fn bind_shell(self, trench: &Trench) -> Vec3 {
-        trench.gamma(self.shell_s)
+        trench.gamma(self.shell_s) + self.field().cone_axis() * crate::trench::RAIL_EPS
     }
 
     pub fn pos(self, trench: Option<&Trench>) -> Vec3 {

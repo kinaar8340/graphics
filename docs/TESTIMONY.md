@@ -2,7 +2,11 @@
 
 **Verdict (freeze):** faceplate pass, clock fail, gun deferred.
 
-The bind held. `04_trench` is a curve of grains on γ(s). Even/odd were the same contact scribble, which is why the clocks did not read. That was occupancy, not camera. `LF=0` stays the law of `make testimony` until 01 and 02 read as complementary dashes at the locked eye, no caption.
+Rails were given one honest ε. `RAIL_EPS = 0.02` (top of `0.01R`–`0.02R`). Field 0 is `γ + ε ŷ`, field 1 is `γ + ε ẑ`. World cone axes, not the camera. Occupancy 256 unchanged.
+
+At yaw `0.55` / pitch `0.42` / distance `4.2`, `01` and `02` are still one necklace. `03` is denser, not a ladder. `04` at `γ(0.18)` shows overlapping beads, not air between rails. The witness splat is larger than `0.02R`. Growing ε until the slot reads at `4.2` would trip “even/odd look like two meshes.” Stop. That is a result: sculpture distance cannot carry interlace as rails without breaking the one-faceplate reading.
+
+Next stills-only probe is temporal (locked eye, 2s even / 2s odd / 2s both), not more geometry. Do not fold that strip into `both.mp4` yet. `LF=0`. No gun.
 
 Silent objects off Vulkan. HUD lives in `make demo` only. Captions live here.
 
@@ -69,12 +73,12 @@ Dense 4k cut (pre-occupancy): `even=1347.844 odd=1872.004 both=3219.883`. Occupa
 - Occupancy made beads instead of a stroke. `01_even` and `02_odd` are still the same dotted body at the locked eye — complementary in the record, not yet in the picture. `03_both` is denser, not a second mesh.
 - `04_trench` aimed at \(\gamma(0.18)\): grains on the body, not a volume cloud.
 
-Clocks still need a caption. Next stills-only move is the cheap \(\hat y\) / \(\hat z\) rails, not the gun. The 30s loop is the body, not proof of clocks.
+Clocks still need a caption. Rails at `ε = 0.02R` did not open a slot at this eye or at `04`. The 30s loop is the body, not proof of clocks. Temporal strip is the next stills-only probe.
 
 ## Occupancy (the CRT leftover)
 
 Do not write `s_i = i/N` for every mote on both fields. Field 0 owns even sites `s = 0, 2, 4, … / N`. Field 1 owns odd sites `s = 1, 3, 5, … / N`. `03_both` is the two dashed sets on the same γ.
 
-`N_OCCUPANCY = 256` (128+128). 4096 even/odd is occupancy in the record and one stroke in the picture. Layout, palette, camera lock, and `live_fiber_writes` stay put. No gun. No rails until 01/02 still fail as complementary dashes.
+`N_OCCUPANCY = 256` (128+128). `RAIL_EPS = 0.02`. Layout, palette, camera lock, and `live_fiber_writes` stay put. No gun.
 
-Gun-on is allowed only after 01 and 02 read as complementary dashes at yaw `0.55`, pitch `0.42`, distance `4.2`, no caption. Then the gun is a write beam along γ, not a second sculpture.
+Gun-on is allowed only after 01 and 02 read as complementary dashes at yaw `0.55`, pitch `0.42`, distance `4.2`, no caption — or after a locked temporal strip shows a tick. Then the gun is a write beam along γ, not a second sculpture.

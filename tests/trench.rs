@@ -3,7 +3,7 @@
 use glam::Vec3;
 use shellscan::{
     to_gpu_particle, to_gpu_particle_on, Field, Phosphor, QgaPixel, SectionKind, Trench, TwoClock,
-    N_OCCUPANCY,
+    N_OCCUPANCY, RAIL_EPS,
 };
 
 #[test]
@@ -16,7 +16,7 @@ fn bind_leaves_hopf_alone() {
     let bound = p.bind_shell(&trench);
     assert_eq!((p.theta, p.phi, p.psi), hopf);
     assert!(unbound.distance(bound) > 0.05);
-    let g = trench.gamma(0.25);
+    let g = trench.gamma(0.25) + Field::Odd.cone_axis() * RAIL_EPS;
     assert!(bound.distance(g) < 1e-5);
 }
 
@@ -121,4 +121,18 @@ fn occupancy_even_odd_sites_are_complementary() {
     for i in even_idx {
         assert!(!odd_idx.contains(&i), "site {i} owned by both fields");
     }
+}
+
+#[test]
+fn rails_are_world_cone_axes() {
+    let trench = Trench::circle(64);
+    let even = QgaPixel::new(1.57, 1.57, 0.0, 0.4, 1.0, Field::Even, 0.25);
+    let odd = QgaPixel::new(0.3, 0.0, 0.0, 0.4, 1.0, Field::Odd, 0.25);
+    let g = trench.gamma(0.25);
+    let e = even.bind_shell(&trench);
+    let o = odd.bind_shell(&trench);
+    assert!((e - (g + Vec3::Y * RAIL_EPS)).length() < 1e-5);
+    assert!((o - (g + Vec3::Z * RAIL_EPS)).length() < 1e-5);
+    let split = (e - o).length();
+    assert!((split - RAIL_EPS * 2f32.sqrt()).abs() < 1e-4);
 }
