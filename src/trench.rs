@@ -9,7 +9,12 @@ use std::path::Path;
 
 pub const MAGIC: &[u8; 4] = b"SHSC";
 pub const VERSION: u32 = 1;
+/// γ table in `shell_trench.bin`. Not the occupancy grid.
 pub const N_MOTES: usize = 4096;
+/// Occupancy interlace. Field 0 owns even sites, field 1 odd sites.
+/// 4096 even/odd is occupancy in the record and one stroke in the picture.
+/// 256 sites (128+128) is dense enough to be a trench and sparse enough to dash.
+pub const N_OCCUPANCY: usize = 256;
 
 /// Contact trench + dim shell skin. Faces are the envelope, not a second phosphor.
 #[derive(Clone, Debug)]

@@ -137,10 +137,14 @@ impl Phosphor {
         p
     }
 
-    /// 4k elliptic motes on the trench. Even `i` → feeling; odd `i` → visual.
-    /// `shell_s = i / n`. Hopf tilt is elliptic vs the field's cone axis.
+    /// Occupancy interlace on γ. **Not** “every mote, both fields.”
+    ///
+    /// `n` sites on `[0,1)`, `n` even. Field 0 owns even sites
+    /// `s = 0, 2, 4, … / n`. Field 1 owns odd sites `s = 1, 3, 5, … / n`.
+    /// `03_both` is the two dashed sets on the same curve.
+    /// Hopf tilt stays elliptic vs the field's cone axis. Layout untouched.
     pub fn on_trench(n: usize) -> Self {
-        let n = n.max(2);
+        let n = n.max(2) & !1;
         let mut pixels = Vec::with_capacity(n);
         for i in 0..n {
             let s = i as f32 / n as f32;

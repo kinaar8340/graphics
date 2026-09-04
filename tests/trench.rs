@@ -3,7 +3,7 @@
 use glam::Vec3;
 use shellscan::{
     to_gpu_particle, to_gpu_particle_on, Field, Phosphor, QgaPixel, SectionKind, Trench, TwoClock,
-    N_MOTES,
+    N_OCCUPANCY,
 };
 
 #[test]
@@ -37,7 +37,7 @@ fn motes_lie_on_the_trench() {
 #[test]
 fn both_fields_brighter_after_gpu_pack() {
     let trench = Trench::circle(256);
-    let mut ph = Phosphor::on_trench(N_MOTES);
+    let mut ph = Phosphor::on_trench(N_OCCUPANCY);
     let clock = TwoClock::interlaced();
     ph.tick(0, clock);
     ph.tick(1, clock);
@@ -81,7 +81,7 @@ fn load_offline_artifact() {
     let trench = Trench::load(path).expect("run make export-shell");
     assert!(trench.samples.len() >= 64);
     assert!(!trench.verts.is_empty());
-    let mut ph = Phosphor::on_trench(N_MOTES);
+    let mut ph = Phosphor::on_trench(N_OCCUPANCY);
     ph.tick(0, TwoClock::windowed());
     ph.tick(1, TwoClock::windowed());
     let gpu: Vec<_> = ph
@@ -94,4 +94,31 @@ fn load_offline_artifact() {
         assert!(d < 0.12, "offline mote left trench d={d}");
     }
     assert!(ph.elliptic_only());
+}
+
+#[test]
+fn occupancy_even_odd_sites_are_complementary() {
+    let n = N_OCCUPANCY;
+    let ph = Phosphor::on_trench(n);
+    assert_eq!(ph.pixels.len(), n);
+    let mut even_idx = Vec::new();
+    let mut odd_idx = Vec::new();
+    for p in &ph.pixels {
+        let i = (p.shell_s * n as f32).round() as i32;
+        match p.field() {
+            Field::Even => {
+                assert_eq!(i % 2, 0, "field 0 must own even sites, got {i}");
+                even_idx.push(i);
+            }
+            Field::Odd => {
+                assert_eq!(i % 2, 1, "field 1 must own odd sites, got {i}");
+                odd_idx.push(i);
+            }
+        }
+    }
+    assert_eq!(even_idx.len(), n / 2);
+    assert_eq!(odd_idx.len(), n / 2);
+    for i in even_idx {
+        assert!(!odd_idx.contains(&i), "site {i} owned by both fields");
+    }
 }

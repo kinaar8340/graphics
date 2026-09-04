@@ -1,5 +1,5 @@
 //! Phosphor Loom first window. demo-tiny scaffold + one extra mesh (the shell).
-//! Live loom off. Gun off. 4k elliptic motes on the trench.
+//! Live loom off. Gun off. Occupancy interlace on γ. LF=0.
 
 use anyhow::{Context, Result};
 use glam::Vec3;
@@ -7,7 +7,9 @@ use qga_gpu::{
     hud_text, Camera, GpuContext, GpuParticle, HudVert, LineStyle, Renderer, UploadStats,
     VisualState,
 };
-use shellscan::{capture, scene, to_gpu_particle_on, Field, Phosphor, Trench, TwoClock, N_MOTES};
+use shellscan::{
+    capture, scene, to_gpu_particle_on, Field, Phosphor, Trench, TwoClock, N_OCCUPANCY,
+};
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::time::Instant;
@@ -263,7 +265,7 @@ fn run_stills(width: u32, height: u32) -> Result<()> {
     )?;
 
     // 01 — even / feeling only.
-    let mut even = Phosphor::on_trench(N_MOTES);
+    let mut even = Phosphor::on_trench(N_OCCUPANCY);
     hold_field(&mut even, Field::Even, 4);
     renderer.write_particles(&gpu, &pack_lit(&even, &trench))?;
     grab_png(
@@ -276,7 +278,7 @@ fn run_stills(width: u32, height: u32) -> Result<()> {
     )?;
 
     // 02 — odd / visual only.
-    let mut odd = Phosphor::on_trench(N_MOTES);
+    let mut odd = Phosphor::on_trench(N_OCCUPANCY);
     hold_field(&mut odd, Field::Odd, 4);
     renderer.write_particles(&gpu, &pack_lit(&odd, &trench))?;
     grab_png(
@@ -289,7 +291,7 @@ fn run_stills(width: u32, height: u32) -> Result<()> {
     )?;
 
     // 03 — both fields, same 8-frame path as Phase 3.
-    let mut both = Phosphor::on_trench(N_MOTES);
+    let mut both = Phosphor::on_trench(N_OCCUPANCY);
     hold_both_8(&mut both);
     let parts = pack_lit(&both, &trench);
     let e = field_mass(&both, &pack(&both, &trench), Field::Even);
@@ -334,7 +336,7 @@ fn run_orbit(frames: u32, width: u32, height: u32) -> Result<()> {
     camera.cinematic = true;
     upload_static(&gpu, &mut renderer, &trench)?;
     renderer.write_hud(&gpu, &[])?;
-    let mut ph = Phosphor::on_trench(N_MOTES);
+    let mut ph = Phosphor::on_trench(N_OCCUPANCY);
     hold_both_8(&mut ph);
     let clock = TwoClock::windowed();
     let n = frames.max(1);
@@ -375,7 +377,7 @@ fn run_headless(frames: u32) -> Result<()> {
         ..VisualState::default()
     };
     upload_static(&gpu, &mut renderer, &trench)?;
-    let mut ph = Phosphor::on_trench(N_MOTES);
+    let mut ph = Phosphor::on_trench(N_OCCUPANCY);
     let clock = TwoClock::windowed();
     let n = frames.max(1);
     let mut last = Vec::new();
@@ -422,7 +424,7 @@ impl App {
                 ..VisualState::default()
             },
             trench,
-            ph: Phosphor::on_trench(N_MOTES),
+            ph: Phosphor::on_trench(N_OCCUPANCY),
             clock: TwoClock::windowed(),
             last: Instant::now(),
             time: 0.0,

@@ -1,5 +1,9 @@
 # Testimony — Phase 4
 
+**Verdict (freeze):** faceplate pass, clock fail, gun deferred.
+
+The bind held. `04_trench` is a curve of grains on γ(s). Even/odd were the same contact scribble, which is why the clocks did not read. That was occupancy, not camera. `LF=0` stays the law of `make testimony` until 01 and 02 read as complementary dashes at the locked eye, no caption.
+
 Silent objects off Vulkan. HUD lives in `make demo` only. Captions live here.
 
 Genre: `inner_cone` `make testimony` — looping MP4 plus stills. Copy the genre, not the rivers. This set is elliptic-only, gun off. The types are **clock states**, not flux kinds.
@@ -59,10 +63,18 @@ Fail:
 
 ## What the stills actually show
 
-`03_both` energy on this cut: `even=1347.844 odd=1872.004 both=3219.883` — same 8-frame sheet as Phase 3. Odd-hot because frame 7 is an odd write.
+Dense 4k cut (pre-occupancy): `even=1347.844 odd=1872.004 both=3219.883`. Occupancy 256-site cut: `even=84.241 odd=117.002 both=201.244` \(= 3219.883 \times 256/4096\). Same compositor, same odd-hot, fewer sites.
 
-- `00_hull` is the envelope: observer, two cones, gold torus, dim shell. Zero motes.
-- `01_even` / `02_odd` / `03_both` share one eye. The phosphor is one contact scribble, cyan `0.55`, not two meshes. At this three-quarter the even/odd persistence split is in the energy line, not a second object.
-- `04_trench` was reshot aimed at \(\gamma(0.18)\). Grain is a dotted curve on the body, not a volume cloud and not a cone fill. If that still had been a soup, the next move would be another graze, not fibers.
+- `00_hull` is the envelope. Zero motes.
+- Occupancy made beads instead of a stroke. `01_even` and `02_odd` are still the same dotted body at the locked eye — complementary in the record, not yet in the picture. `03_both` is denser, not a second mesh.
+- `04_trench` aimed at \(\gamma(0.18)\): grains on the body, not a volume cloud.
 
-The 30s loop is `output/mp4/both.mp4` (`static_uploads=1`, `live_fiber_writes=0`, glow off).
+Clocks still need a caption. Next stills-only move is the cheap \(\hat y\) / \(\hat z\) rails, not the gun. The 30s loop is the body, not proof of clocks.
+
+## Occupancy (the CRT leftover)
+
+Do not write `s_i = i/N` for every mote on both fields. Field 0 owns even sites `s = 0, 2, 4, … / N`. Field 1 owns odd sites `s = 1, 3, 5, … / N`. `03_both` is the two dashed sets on the same γ.
+
+`N_OCCUPANCY = 256` (128+128). 4096 even/odd is occupancy in the record and one stroke in the picture. Layout, palette, camera lock, and `live_fiber_writes` stay put. No gun. No rails until 01/02 still fail as complementary dashes.
+
+Gun-on is allowed only after 01 and 02 read as complementary dashes at yaw `0.55`, pitch `0.42`, distance `4.2`, no caption. Then the gun is a write beam along γ, not a second sculpture.
