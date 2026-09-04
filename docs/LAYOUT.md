@@ -46,15 +46,18 @@ RGB is `rgb_preview()`, a projection onto the four inner_cone hues.
 \[
 \text{pos} = \begin{cases}
 \sigma(\mathrm{hopf}(\theta,\phi,\psi)) & \text{unbound}\\
-\gamma(\texttt{shell\_s}) & \text{bound}
+\gamma(s)+\varepsilon\,\hat y & \text{bound, field 0}\\
+\gamma(s)+\varepsilon\,\hat z & \text{bound, field 1}
 \end{cases}
 \]
 
 `γ` is the trench-parameterized curve on the offline mesh (`assets/shell_trench.bin`).
 `θ,φ,ψ` still decide *what* is written. `shell_s` decides *where it glows*.
-`QgaPixel::bind_shell` returns `γ(shell_s)` and does not touch Hopf fields.
+`QgaPixel::bind_shell` returns the rail and does not touch Hopf fields.
 Optional grain: offset along the local radial normal by a fraction of `amplitude * persist`.
 Motes that leave the trench are a bug.
+
+**Splat vs ε (Software fact).** `RAIL_EPS = 0.02` (units of shell radius R ≈ 1). On `04_trench` the witness particle splat at persist=1 is larger than `0.02R`, so the rail slot is not air in the picture. Do not shrink splat radius to flatter the Model. Do not grow ε past this until it reads as two meshes.
 
 Do not path-dep `flux_trajectoid`. The sidecar writes bytes; Rust reads bytes.
 

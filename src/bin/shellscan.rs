@@ -29,6 +29,7 @@ struct Args {
     frames: u32,
     stills: bool,
     orbit: bool,
+    tick: bool,
     width: u32,
     height: u32,
 }
@@ -38,6 +39,7 @@ fn parse_args() -> Args {
     let mut frames = 0;
     let mut stills = false;
     let mut orbit = false;
+    let mut tick = false;
     let mut width = 0;
     let mut height = 0;
     let mut it = std::env::args().skip(1);
@@ -52,6 +54,10 @@ fn parse_args() -> Args {
                 orbit = true;
                 headless = true;
             }
+            "--tick" => {
+                tick = true;
+                headless = true;
+            }
             "--frames" => {
                 frames = it.next().and_then(|s| s.parse().ok()).unwrap_or(8);
             }
@@ -64,7 +70,7 @@ fn parse_args() -> Args {
             _ => {}
         }
     }
-    if stills || orbit {
+    if stills || orbit || tick {
         if width == 0 {
             width = 1280;
         }
@@ -73,13 +79,20 @@ fn parse_args() -> Args {
         }
     }
     if headless && frames == 0 {
-        frames = if orbit { 900 } else { 8 };
+        frames = if orbit {
+            900
+        } else if tick {
+            180
+        } else {
+            8
+        };
     }
     Args {
         headless,
         frames,
         stills,
         orbit,
+        tick,
         width,
         height,
     }
@@ -326,6 +339,63 @@ fn run_stills(width: u32, height: u32) -> Result<()> {
     Ok(())
 }
 
+/// Locked-eye tick. 2s field 0, 2s field 1, 2s both. Hard cuts. No orbit.
+fn run_tick(width: u32, height: u32) -> Result<()> {
+    const FPS: u32 = 30;
+    const HOLD: u32 = 2 * FPS;
+    let trench = load_trench()?;
+    let mut gpu = GpuContext::init_headless_extent(width, height).context("init_headless")?;
+    println!("{}", gpu.report());
+    let mut renderer = Renderer::new(&gpu)?;
+    let vis = silent_vis();
+    let eye = locked_eye(width as f32 / height.max(1) as f32);
+    upload_static(&gpu, &mut renderer, &trench)?;
+    renderer.write_hud(&gpu, &[])?;
+
+    let mut even = Phosphor::on_trench(N_OCCUPANCY);
+    hold_field(&mut even, Field::Even, 4);
+    let mut odd = Phosphor::on_trench(N_OCCUPANCY);
+    hold_field(&mut odd, Field::Odd, 4);
+    let mut both = Phosphor::on_trench(N_OCCUPANCY);
+    hold_both_8(&mut both);
+    let packs = [
+        pack_lit(&even, &trench),
+        pack_lit(&odd, &trench),
+        pack_lit(&both, &trench),
+    ];
+
+    let dir = Path::new("output/png/tick");
+    std::fs::create_dir_all(dir)?;
+    let mut n = 0u32;
+    for (seg, parts) in packs.iter().enumerate() {
+        renderer.write_particles(&gpu, parts)?;
+        for _ in 0..HOLD {
+            let path = dir.join(format!("frame_{:04}.png", n));
+            grab_png(
+                &mut gpu,
+                &mut renderer,
+                &eye,
+                &vis,
+                n as f32 / FPS as f32,
+                &path,
+            )?;
+            n += 1;
+        }
+        println!("tick segment {seg} frames={}", HOLD);
+    }
+    anyhow::ensure!(n == 3 * HOLD, "tick length {n}");
+    anyhow::ensure!(
+        renderer.upload_stats().static_uploads == 1,
+        "tick must keep static_uploads == 1"
+    );
+    anyhow::ensure!(
+        renderer.upload_stats().live_fiber_writes == 0,
+        "tick must keep LF=0"
+    );
+    println!("tick frames={n} static_uploads=1 live_fiber_writes=0");
+    Ok(())
+}
+
 fn run_orbit(frames: u32, width: u32, height: u32) -> Result<()> {
     let trench = load_trench()?;
     let mut gpu = GpuContext::init_headless_extent(width, height).context("init_headless")?;
@@ -568,6 +638,8 @@ fn main() -> Result<()> {
     let args = parse_args();
     if args.stills {
         run_stills(args.width.max(1280), args.height.max(720))
+    } else if args.tick {
+        run_tick(args.width.max(1280), args.height.max(720))
     } else if args.orbit {
         run_orbit(args.frames, args.width.max(1280), args.height.max(720))
     } else if args.headless {

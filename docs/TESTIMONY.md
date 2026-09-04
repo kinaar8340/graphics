@@ -2,11 +2,15 @@
 
 **Verdict (freeze):** faceplate pass, clock fail, gun deferred.
 
+Sculpture distance cannot carry occupancy or rails as a picture. Clocks live in the ledger and, if anywhere on video, in a locked-eye tick. Gun off.
+
 Rails were given one honest ε. `RAIL_EPS = 0.02` (top of `0.01R`–`0.02R`). Field 0 is `γ + ε ŷ`, field 1 is `γ + ε ẑ`. World cone axes, not the camera. Occupancy 256 unchanged.
 
-At yaw `0.55` / pitch `0.42` / distance `4.2`, `01` and `02` are still one necklace. `03` is denser, not a ladder. `04` at `γ(0.18)` shows overlapping beads, not air between rails. The witness splat is larger than `0.02R`. Growing ε until the slot reads at `4.2` would trip “even/odd look like two meshes.” Stop. That is a result: sculpture distance cannot carry interlace as rails without breaking the one-faceplate reading.
+At yaw `0.55` / pitch `0.42` / distance `4.2`, `01` and `02` are still one necklace. `03` is denser, not a ladder. `04` at `γ(0.18)` shows overlapping beads, not air between rails. The witness splat is larger than `0.02R`. Growing ε until the slot reads at `4.2` would trip “even/odd look like two meshes.” Stop.
 
-Next stills-only probe is temporal (locked eye, 2s even / 2s odd / 2s both), not more geometry. Do not fold that strip into `both.mp4` yet. `LF=0`. No gun.
+`output/mp4/tick.mp4` is the locked-eye probe (not `both.mp4`). Hard cuts: 2s field 0 → 2s field 1 → 2s both. `LF=0`. No gun.
+
+**Tick result:** fail. The trench stays one body (good). The cut does not read as a change in which beads hold persist. Field 0 and field 1 are still one necklace; both is only denser. Clocks stay a caption and a ledger. That is the end of Phase 4 geometry. Gun off. The faceplate already passed.
 
 Silent objects off Vulkan. HUD lives in `make demo` only. Captions live here.
 

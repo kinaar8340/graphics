@@ -52,7 +52,7 @@ Drop: rectangular raster as ontology, three independent guns, progressive “mor
 1. `qga_pixel` 32-byte record. Encode section, Hopf address, field bit. Project RGB for the witness camera. **No scene.**  
 2. Two-clock write. Clock 0 static / even / feeling. Clock 1 live / odd / visual. Persistence difference must be measurable.  
 3. **Shipped.** Bind + window. Offline trench, 4k elliptic, `pos = γ(shell_s)`. Headless 8-frame: `SU=1`, `LF=0`, `PS=0`, `even=1347.844`, `odd=1872.004`, `both=3219.883`. `demo-tiny`-scale window. Gun off.  
-4. Testimony stills. Faceplate pass, clock fail, gun deferred. Occupancy interlace next: even sites field 0, odd sites field 1. No HUD, no `G`, `LF=0`. See [TESTIMONY.md](TESTIMONY.md).  
+4. Testimony. Faceplate pass, clock fail, gun deferred. Occupancy + rails + locked tick (`tick.mp4`) did not make clocks a picture. `LF=0`. See [TESTIMONY.md](TESTIMONY.md).  
 5. Optional SLM / `vqc_demo` photonic sibling.
 
 ## First scene (Phase 3, shipped)

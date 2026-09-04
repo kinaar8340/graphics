@@ -53,7 +53,8 @@ make test          # CPU: record, clocks, trench bind
 make headless      # 8 frames, 4k elliptic, static_uploads == 1
 make demo          # demo-tiny-scale window; live_every = 30; gun off; HUD on
 make stills        # five 1280×720 PNGs, no HUD, glow off
-make testimony     # stills + 30s orbit of 03_both
+make tick          # locked-eye 6s: 2s even / 2s odd / 2s both → output/mp4/tick.mp4
+make testimony     # stills + 30s orbit of 03_both (body, not clocks)
 ```
 
 Sidecar (once, not in the frame loop):
