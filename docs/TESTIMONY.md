@@ -56,3 +56,13 @@ Fail:
 - Anyone reaches for `G` to make it “read.”
 
 `G` exists in `make demo`. It does not exist in `make testimony`.
+
+## What the stills actually show
+
+`03_both` energy on this cut: `even=1347.844 odd=1872.004 both=3219.883` — same 8-frame sheet as Phase 3. Odd-hot because frame 7 is an odd write.
+
+- `00_hull` is the envelope: observer, two cones, gold torus, dim shell. Zero motes.
+- `01_even` / `02_odd` / `03_both` share one eye. The phosphor is one contact scribble, cyan `0.55`, not two meshes. At this three-quarter the even/odd persistence split is in the energy line, not a second object.
+- `04_trench` was reshot aimed at \(\gamma(0.18)\). Grain is a dotted curve on the body, not a volume cloud and not a cone fill. If that still had been a soup, the next move would be another graze, not fibers.
+
+The 30s loop is `output/mp4/both.mp4` (`static_uploads=1`, `live_fiber_writes=0`, glow off).

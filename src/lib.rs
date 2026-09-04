@@ -4,6 +4,7 @@
 //! frame ([qga_gpu]), the observer ([inner_cone]), or the faceplate mesh
 //! ([flux_trajectoid]).
 
+pub mod capture;
 pub mod clock;
 pub mod convert;
 pub mod pixel;

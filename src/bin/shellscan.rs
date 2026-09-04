@@ -7,8 +7,8 @@ use qga_gpu::{
     hud_text, Camera, GpuContext, GpuParticle, HudVert, LineStyle, Renderer, UploadStats,
     VisualState,
 };
-use shellscan::{scene, to_gpu_particle_on, Field, Phosphor, Trench, TwoClock, N_MOTES};
-use std::path::PathBuf;
+use shellscan::{capture, scene, to_gpu_particle_on, Field, Phosphor, Trench, TwoClock, N_MOTES};
+use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::time::Instant;
 use winit::application::ApplicationHandler;
@@ -17,28 +17,70 @@ use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
 use winit::keyboard::{KeyCode, PhysicalKey};
 use winit::window::{Window, WindowId};
 
+/// Locked three-quarter for 00–03. Software fact of the testimony eye.
+const EYE_YAW: f32 = 0.55;
+const EYE_PITCH: f32 = 0.42;
+const EYE_DIST: f32 = 4.2;
+
 struct Args {
     headless: bool,
     frames: u32,
+    stills: bool,
+    orbit: bool,
+    width: u32,
+    height: u32,
 }
 
 fn parse_args() -> Args {
     let mut headless = false;
     let mut frames = 0;
+    let mut stills = false;
+    let mut orbit = false;
+    let mut width = 0;
+    let mut height = 0;
     let mut it = std::env::args().skip(1);
     while let Some(a) = it.next() {
         match a.as_str() {
             "--headless" => headless = true,
+            "--stills" => {
+                stills = true;
+                headless = true;
+            }
+            "--orbit" => {
+                orbit = true;
+                headless = true;
+            }
             "--frames" => {
                 frames = it.next().and_then(|s| s.parse().ok()).unwrap_or(8);
+            }
+            "--width" => {
+                width = it.next().and_then(|s| s.parse().ok()).unwrap_or(1280);
+            }
+            "--height" => {
+                height = it.next().and_then(|s| s.parse().ok()).unwrap_or(720);
             }
             _ => {}
         }
     }
-    if headless && frames == 0 {
-        frames = 8;
+    if stills || orbit {
+        if width == 0 {
+            width = 1280;
+        }
+        if height == 0 {
+            height = 720;
+        }
     }
-    Args { headless, frames }
+    if headless && frames == 0 {
+        frames = if orbit { 900 } else { 8 };
+    }
+    Args {
+        headless,
+        frames,
+        stills,
+        orbit,
+        width,
+        height,
+    }
 }
 
 fn trench_path() -> PathBuf {
@@ -57,6 +99,56 @@ fn pack(ph: &Phosphor, trench: &Trench) -> Vec<GpuParticle> {
         .iter()
         .map(|p| to_gpu_particle_on(*p, Some(trench)))
         .collect()
+}
+
+fn pack_lit(ph: &Phosphor, trench: &Trench) -> Vec<GpuParticle> {
+    ph.pixels
+        .iter()
+        .filter(|p| p.persist > 1e-3)
+        .map(|p| to_gpu_particle_on(*p, Some(trench)))
+        .collect()
+}
+
+fn locked_eye(aspect: f32) -> Camera {
+    let mut c = Camera::orbit(Vec3::ZERO, EYE_DIST);
+    c.yaw = EYE_YAW;
+    c.pitch = EYE_PITCH;
+    c.aspect = aspect;
+    c.cinematic = false;
+    c
+}
+
+fn trench_eye(aspect: f32, target: Vec3) -> Camera {
+    let mut c = Camera::orbit(target, 1.05);
+    c.yaw = 1.05;
+    c.pitch = 0.16;
+    c.aspect = aspect;
+    c.cinematic = false;
+    c
+}
+
+fn silent_vis() -> VisualState {
+    VisualState {
+        glow: 0.0,
+        pulse: 0.45,
+        tube_radius: 0.03,
+        ..VisualState::default()
+    }
+}
+
+fn hold_field(ph: &mut Phosphor, field: Field, writes: u32) {
+    let clock = TwoClock::windowed();
+    let frame = field.bit();
+    for _ in 0..writes {
+        ph.tick(frame, clock);
+    }
+}
+
+fn hold_both_8(ph: &mut Phosphor) {
+    let clock = TwoClock::windowed();
+    for i in 0..8 {
+        ph.tick(i, clock);
+    }
 }
 
 fn field_mass(ph: &Phosphor, gpu: &[GpuParticle], field: Field) -> f32 {
@@ -130,6 +222,143 @@ fn accept_headless(
         "done frames={frames} static_uploads={} live_fiber_writes={} particle_skipped={} even={even:.3} odd={odd:.3} both={both:.3}",
         stats.static_uploads, stats.live_fiber_writes, stats.particle_skipped
     );
+    Ok(())
+}
+
+fn grab_png(
+    gpu: &mut GpuContext,
+    renderer: &mut Renderer,
+    camera: &Camera,
+    vis: &VisualState,
+    time: f32,
+    path: &Path,
+) -> Result<()> {
+    let frame = renderer
+        .render(gpu, camera, vis, time, true)?
+        .context("capture empty")?;
+    capture::save_png(path, frame.width, frame.height, &frame.bgra)?;
+    println!("wrote {} {}x{}", path.display(), frame.width, frame.height);
+    Ok(())
+}
+
+fn run_stills(width: u32, height: u32) -> Result<()> {
+    let trench = load_trench()?;
+    let mut gpu = GpuContext::init_headless_extent(width, height).context("init_headless")?;
+    println!("{}", gpu.report());
+    let mut renderer = Renderer::new(&gpu)?;
+    let vis = silent_vis();
+    let eye = locked_eye(width as f32 / height.max(1) as f32);
+    upload_static(&gpu, &mut renderer, &trench)?;
+    renderer.write_hud(&gpu, &[])?;
+
+    // 00 — envelope, zero motes.
+    renderer.write_particles(&gpu, &[])?;
+    grab_png(
+        &mut gpu,
+        &mut renderer,
+        &eye,
+        &vis,
+        0.0,
+        Path::new("output/png/00_hull.png"),
+    )?;
+
+    // 01 — even / feeling only.
+    let mut even = Phosphor::on_trench(N_MOTES);
+    hold_field(&mut even, Field::Even, 4);
+    renderer.write_particles(&gpu, &pack_lit(&even, &trench))?;
+    grab_png(
+        &mut gpu,
+        &mut renderer,
+        &eye,
+        &vis,
+        0.0,
+        Path::new("output/png/01_even.png"),
+    )?;
+
+    // 02 — odd / visual only.
+    let mut odd = Phosphor::on_trench(N_MOTES);
+    hold_field(&mut odd, Field::Odd, 4);
+    renderer.write_particles(&gpu, &pack_lit(&odd, &trench))?;
+    grab_png(
+        &mut gpu,
+        &mut renderer,
+        &eye,
+        &vis,
+        0.0,
+        Path::new("output/png/02_odd.png"),
+    )?;
+
+    // 03 — both fields, same 8-frame path as Phase 3.
+    let mut both = Phosphor::on_trench(N_MOTES);
+    hold_both_8(&mut both);
+    let parts = pack_lit(&both, &trench);
+    let e = field_mass(&both, &pack(&both, &trench), Field::Even);
+    let o = field_mass(&both, &pack(&both, &trench), Field::Odd);
+    let b: f32 = pack(&both, &trench).iter().map(|g| g.mass).sum();
+    println!("03_both energy even={e:.3} odd={o:.3} both={b:.3} (odd-hot: frame 7 is odd)");
+    renderer.write_particles(&gpu, &parts)?;
+    grab_png(
+        &mut gpu,
+        &mut renderer,
+        &eye,
+        &vis,
+        0.0,
+        Path::new("output/png/03_both.png"),
+    )?;
+
+    // 04 — grazing trench. Same phosphor as 03. Aim at γ(s), not the origin.
+    let graze = trench_eye(width as f32 / height.max(1) as f32, trench.gamma(0.18));
+    grab_png(
+        &mut gpu,
+        &mut renderer,
+        &graze,
+        &vis,
+        0.0,
+        Path::new("output/png/04_trench.png"),
+    )?;
+
+    anyhow::ensure!(
+        renderer.upload_stats().static_uploads == 1,
+        "stills must keep static_uploads == 1"
+    );
+    Ok(())
+}
+
+fn run_orbit(frames: u32, width: u32, height: u32) -> Result<()> {
+    let trench = load_trench()?;
+    let mut gpu = GpuContext::init_headless_extent(width, height).context("init_headless")?;
+    println!("{}", gpu.report());
+    let mut renderer = Renderer::new(&gpu)?;
+    let vis = silent_vis();
+    let mut camera = locked_eye(width as f32 / height.max(1) as f32);
+    camera.cinematic = true;
+    upload_static(&gpu, &mut renderer, &trench)?;
+    renderer.write_hud(&gpu, &[])?;
+    let mut ph = Phosphor::on_trench(N_MOTES);
+    hold_both_8(&mut ph);
+    let clock = TwoClock::windowed();
+    let n = frames.max(1);
+    let dir = Path::new("output/png/orbit");
+    std::fs::create_dir_all(dir)?;
+    for i in 0..n {
+        ph.tick(8 + i, clock);
+        camera.tick_cinematic(1.0 / 30.0);
+        renderer.write_particles(&gpu, &pack_lit(&ph, &trench))?;
+        let path = dir.join(format!("frame_{:04}.png", i));
+        grab_png(
+            &mut gpu,
+            &mut renderer,
+            &camera,
+            &vis,
+            i as f32 / 30.0,
+            &path,
+        )?;
+    }
+    anyhow::ensure!(
+        renderer.upload_stats().static_uploads == 1,
+        "orbit must keep static_uploads == 1"
+    );
+    println!("orbit frames={n} static_uploads=1 live_fiber_writes=0");
     Ok(())
 }
 
@@ -335,7 +564,11 @@ fn run_windowed(frames: u32) -> Result<()> {
 fn main() -> Result<()> {
     env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info")).init();
     let args = parse_args();
-    if args.headless {
+    if args.stills {
+        run_stills(args.width.max(1280), args.height.max(720))
+    } else if args.orbit {
+        run_orbit(args.frames, args.width.max(1280), args.height.max(720))
+    } else if args.headless {
         run_headless(args.frames)
     } else {
         run_windowed(args.frames)

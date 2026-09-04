@@ -1,6 +1,5 @@
 /target
-/output/png/*.png
-/output/mp4/*.mp4
+/output/
 __pycache__/
 *.pyc
 *.log

@@ -23,7 +23,7 @@ This is a **Model** and a **Software fact**. It is not a vacuum tube and not a t
 - [x] Phase 1 — 32-byte `qga_pixel` (section, Hopf address, field bit, RGB preview)
 - [x] Phase 2 — two-clock CPU write + persistence tests
 - [x] Phase 3 — offline trench bind; headless 8-frame; then a `demo-tiny`-scale window
-- [ ] Phase 4 — testimony stills (clock states, not flux kinds)
+- [x] Phase 4 — testimony stills (clock states, not flux kinds)
 - [ ] Phase 5 — optional SLM / photonic sibling
 
 Phase 3 shipped: `pos = γ(shell_s)`. Phase 4 is a camera script. See [docs/TESTIMONY.md](docs/TESTIMONY.md).
