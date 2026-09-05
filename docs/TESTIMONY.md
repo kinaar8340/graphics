@@ -1,8 +1,10 @@
 # Testimony — Phase 4
 
-**Verdict (freeze):** faceplate pass, clock fail, gun deferred.
+**Verdict (freeze):** faceplate pass, clock fail, gun deferred. Phase 4 geometry is closed.
 
 Sculpture distance cannot carry occupancy or rails as a picture. Clocks live in the ledger and, if anywhere on video, in a locked-eye tick. Gun off.
+
+Do not spend another commit proving the same collapse. Phase 6 is a writer of `qga_pixel` records, not a Hopf sculpture.
 
 Rails were given one honest ε. `RAIL_EPS = 0.02` (top of `0.01R`–`0.02R`). Field 0 is `γ + ε ŷ`, field 1 is `γ + ε ẑ`. World cone axes, not the camera. Occupancy 256 unchanged.
 

@@ -23,10 +23,11 @@ This is a **Model** and a **Software fact**. It is not a vacuum tube and not a t
 - [x] Phase 1 — 32-byte `qga_pixel` (section, Hopf address, field bit, RGB preview)
 - [x] Phase 2 — two-clock CPU write + persistence tests
 - [x] Phase 3 — offline trench bind; headless 8-frame; then a `demo-tiny`-scale window
-- [x] Phase 4 — testimony stills (clock states, not flux kinds)
-- [ ] Phase 5 — optional SLM / photonic sibling
+- [x] Phase 4 — closed. Faceplate pass, clock fail (tested: not visible at sculpture distance), gun deferred
+- [ ] Phase 5 — optional SLM / photonic sibling (later)
+- [ ] Phase 6 — picker: writes 32-byte `qga_pixel` (`make pick`). Not a second loom.
 
-Phase 3 shipped: `pos = γ(shell_s)`. Phase 4 is a camera script. See [docs/TESTIMONY.md](docs/TESTIMONY.md).
+Hypothesis (two clocks as a picture): **tested, not visible at sculpture distance.** See [docs/TESTIMONY.md](docs/TESTIMONY.md). Splat vs `ε`: [docs/LAYOUT.md](docs/LAYOUT.md).
 
 ## `qga_pixel`
 
@@ -55,6 +56,7 @@ make demo          # demo-tiny-scale window; live_every = 30; gun off; HUD on
 make stills        # five 1280×720 PNGs, no HUD, glow off
 make tick          # locked-eye 6s: 2s even / 2s odd / 2s both → output/mp4/tick.mp4
 make testimony     # stills + 30s orbit of 03_both (body, not clocks)
+make pick          # Phase 6 writer: hemisphere → 32-byte qga_pixel (not the faceplate)
 ```
 
 Sidecar (once, not in the frame loop):

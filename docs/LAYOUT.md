@@ -59,6 +59,8 @@ Motes that leave the trench are a bug.
 
 **Splat vs ε (Software fact).** `RAIL_EPS = 0.02` (units of shell radius R ≈ 1). On `04_trench` the witness particle splat at persist=1 is larger than `0.02R`, so the rail slot is not air in the picture. Do not shrink splat radius to flatter the Model. Do not grow ε past this until it reads as two meshes.
 
+Occupancy and rails stay **faceplate-side** (`N_OCCUPANCY=256`, `ε=0.02R`). A Phase 6 picker may export the field bit; it does not own the trench.
+
 Do not path-dep `flux_trajectoid`. The sidecar writes bytes; Rust reads bytes.
 
 `exited` / `pierced` stay out of the 32-byte slot.

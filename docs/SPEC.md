@@ -14,7 +14,7 @@ This is a thin scene crate in the inner_cone pattern. It does not own the frame,
 | The Hopf fibration \(S^3\to S^2\) exists. A plane cutting a double cone traces ellipse, parabola, hyperbola, or a degenerate pair of lines. | **Theorem** (cited) |
 | Dual-cone observer (visual cyan \(+Z\), feeling orange, \(\pi/2\) about \(X\)). Four flux kinds are color classes. Trajectoid shell is the faceplate. Odd field writes the visual cone; even field writes the feeling cone. Separator torus is blanking. Persistence is mote age, not an RGB fade. | **Model** |
 | `qga_gpu` owns the frame. Loom writes. Particle records are 32 bytes. `static_uploads` / `live_fiber_writes` / `particle_skipped` are upload counters. RGB in the particle shader is a witness projection. | **Software fact** |
-| Two-clock interlacing on those cones will read as a display rather than a particle demo. | **Hypothesis** |
+| Two-clock interlacing on those cones will read as a display rather than a particle demo. | **Hypothesis, tested: not visible at sculpture distance.** Occupancy, rails (`ε=0.02R`), and locked tick (`tick.mp4`) all collapsed to one necklace. Clocks live in the ledger. Gun off. |
 
 If a sentence cannot wear one of those four tags, it does not belong here.
 
@@ -34,8 +34,9 @@ If a sentence cannot wear one of those four tags, it does not belong here.
 \text{observer } S^2 \to \text{dual cones} \to \text{inverse-Hopf loom} \to \text{qga\_pixel field on a trajectoid shell} \to \text{two-clock persistence} \to \text{eye}
 \]
 
-Keep: gun (inverse-Hopf), two-field clock, persistence, faceplate ≠ framebuffer.  
-Drop: rectangular raster as ontology, three independent guns, progressive “more pixels,” vacuum-tube claims, Hopf-as-display-theorem.
+Keep: faceplate, `qga_pixel` record, occupancy 256, rails `ε=0.02R` as data.  
+Drop: gun on, more stills, bigger `ε`, smaller splat, Philogb gallery, clocks as a picture.  
+Do not spend another commit proving the same collapse.
 
 ## Palette (do not invent a fifth)
 
@@ -52,8 +53,9 @@ Drop: rectangular raster as ontology, three independent guns, progressive “mor
 1. `qga_pixel` 32-byte record. Encode section, Hopf address, field bit. Project RGB for the witness camera. **No scene.**  
 2. Two-clock write. Clock 0 static / even / feeling. Clock 1 live / odd / visual. Persistence difference must be measurable.  
 3. **Shipped.** Bind + window. Offline trench, 4k elliptic, `pos = γ(shell_s)`. Headless 8-frame: `SU=1`, `LF=0`, `PS=0`, `even=1347.844`, `odd=1872.004`, `both=3219.883`. `demo-tiny`-scale window. Gun off.  
-4. Testimony. Faceplate pass, clock fail, gun deferred. Occupancy + rails + locked tick (`tick.mp4`) did not make clocks a picture. `LF=0`. See [TESTIMONY.md](TESTIMONY.md).  
-5. Optional SLM / `vqc_demo` photonic sibling.
+4. **Closed.** Testimony. Faceplate pass, clock fail, gun deferred. Occupancy + rails + locked tick (`tick.mp4`) did not make clocks a picture. `LF=0`. See [TESTIMONY.md](TESTIMONY.md).  
+5. Optional SLM / `vqc_demo` photonic sibling. Later. Not the next binary.  
+6. **Picker (writer).** Sibling binary `make pick`. Emits a 32-byte `QgaPixel` (and JSON). Hemisphere sets \((\theta,\phi)\). Lock-to-4 on. One optional fiber arc. Does not own the faceplate window. Not a Philogb restyle. Not a second loom.
 
 ## First scene (Phase 3, shipped)
 
