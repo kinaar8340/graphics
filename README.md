@@ -2,36 +2,68 @@
 
 **The Realism Interface** — *a 3D CRT*
 
-**Repo / crate / folder name:** `shellscan`  
-**Public title:** Phosphor Loom  
-**Sculpture series:** The Realism Interface  
-**Subtitle:** a 3D CRT  
-**Type (not a repo):** `qga_pixel`
-
-Remote: [github.com/kinaar8340/graphics](https://github.com/kinaar8340/graphics).  
-The checkout **should** be `~/Projects/shellscan`. This tree is still `~/Projects/graphics` until the directory is renamed. Do not create a second repo. `qga_pixel` is the type, not a repo. Crate name: `shellscan`.
+| | |
+|---|---|
+| Public title | Phosphor Loom |
+| Sculpture | The Realism Interface |
+| Subtitle | a 3D CRT |
+| Crate | `shellscan` |
+| Type (not a repo) | `qga_pixel` |
+| Checkout | still `~/Projects/graphics` until renamed to `~/Projects/shellscan` |
+| Remote | [github.com/kinaar8340/graphics](https://github.com/kinaar8340/graphics) |
 
 A CRT writes a glowing surface by sweeping a beam in two fields. This crate writes a glowing shell by lifting a chart through inverse-Hopf in two clocks. The pixel is a local plane-cut of the observer’s double cone. Color is a conic type, not an RGB triple. The shell is a trajectoid, so the screen has an identity and a trench, not a rectangle.
 
-`qga_gpu` owns the frame. `inner_cone` owns the observer. `flux_trajectoid` owns the shell. The only new noun is `qga_pixel`.
+Four layers of one machine, not a mashup render:
+
+| Layer | Role |
+|---|---|
+| CRT | scan ritual (two-field ledger, persist as age, separator as blanking) |
+| Inverse-Hopf loom | write path / address \((\theta,\phi,\psi)\) |
+| Plane ∩ double cone | pixel algebra (section) |
+| Trajectoid shell | faceplate \(\gamma(s)\) |
+
+`qga_gpu` owns the frame. `inner_cone` owns the observer. `flux_trajectoid` owns the shell (sidecar only). The only new noun is `qga_pixel`.
 
 This is a **Model** and a **Software fact**. It is not a vacuum tube and not a theorem of displays. Claims: [docs/SPEC.md](docs/SPEC.md).
+
+## Freeze
+
+Tip of the sign-mask fact: `c5c5095`. Working rule: unfreeze is one labeled sentence, not a new sculpture.
+
+| Slot | State |
+|---|---|
+| Faceplate + bind | Frozen |
+| Two clocks as a picture | Tested, not visible at sculpture distance |
+| Picker as writer | Frozen |
+| SLM sidecar + `generic_512` + `--mask` | Frozen (loopback on unmasked blob) |
+| N1 nested layers in composition | Tested, not visible |
+| `vision_tracker` calib + AttentionWell | Paper + bench solver; not a lens |
+| Scan A consumes `gaze.site` | Frozen |
+| Gun / `LF` | Off |
+| HITL / named panel | Not v1 |
+
+Splat at \(4.2\), persist \(=1\): \(0.0315R\). Rails \(0.02R\) and \(\Delta R=0.08R\) both lost as pictures.
+
+Do not: Scan A consume `site`, HITL Pluto, nested draw, `LF`, stacked clear windows, wetware pine in `demo`.
 
 ## Status
 
 - [x] Phase 0 — spec with four claim labels
-- [x] Phase 1 — 32-byte `qga_pixel` (section, Hopf address, field bit, RGB preview)
+- [x] Phase 1 — 32-byte `qga_pixel`
 - [x] Phase 2 — two-clock CPU write + persistence tests
-- [x] Phase 3 — offline trench bind; headless 8-frame; then a `demo-tiny`-scale window
-- [x] Phase 4 — closed. Faceplate pass, clock fail (tested: not visible at sculpture distance), gun deferred
-- [x] Phase 5 — **v1 closed.** Sidecar: loopback BER 0; `generic_512` (`shell_s=0.5`, trench `746a79b8…`). HITL not v1. Tip `2e1fe9c`. Not a gun.
-- [x] Phase 6 — picker: writes 32-byte `qga_pixel` (`make pick`). Not a second loom.
-- [ ] Animation A — scan head on \(\gamma(s)\). Hypothesis. See [docs/SCAN.md](docs/SCAN.md).
-- [x] Phase 7 — nested ShellCube faceplates. **N1 closed.** Hypothesis tested: not visible in composition. Tip `95175f3`. See [docs/NEST.md](docs/NEST.md).
-- [ ] `vision_tracker` — calibration + well `step()`. Bench `rms_px` is the solver, not a lens. Scan A does not consume `site`. See [docs/VISION.md](docs/VISION.md).
-- [x] Sign mask — SLM seed `--mask {none,antipode,blank,nappe}`. Loopback unmasked. Scan A does not consume `site`. See [docs/SIGN.md](docs/SIGN.md).
+- [x] Phase 3 — offline trench bind; headless 8-frame; `demo-tiny`-scale window
+- [x] Phase 4 — faceplate pass, clock fail, gun deferred. [docs/TESTIMONY.md](docs/TESTIMONY.md)
+- [x] Phase 5 v1 — `vqc_demo` loopback BER 0; `generic_512` (`shell_s=0.5`, trench `746a79b8…`). HITL not v1. [docs/PHASE5.md](docs/PHASE5.md)
+- [x] Phase 6 — `make pick` writes the blob. Not a second loom
+- [ ] Animation A — scan head on \(\gamma(s)\), layer 0. [docs/SCAN.md](docs/SCAN.md)
+- [x] N1 — three confocal trenches, ledger pass, composition fail. [docs/NEST.md](docs/NEST.md)
+- [ ] `vision_tracker` — real lens \(K\) + still. Well is specified. Scan A does not consume `site`. [docs/VISION.md](docs/VISION.md)
+- [x] Sign mask — `--mask {none,antipode,blank,nappe}` on the SLM seed. [docs/SIGN.md](docs/SIGN.md)
 
-Hypothesis (two clocks as a picture): **tested, not visible at sculpture distance.** Nested layers in composition: **tested, not visible.** See [docs/TESTIMONY.md](docs/TESTIMONY.md), [docs/NEST.md](docs/NEST.md). Splat vs `ε`: [docs/LAYOUT.md](docs/LAYOUT.md).
+End goal compatible with the freeze: a pipeline that emits a drive signal (record → dump → phase package → later a named panel / glass). Not a single Vulkan window that is a 4D OAM crystal ball.
+
+The only box still worth ticking inside this crate is `make scan`. Everything else is a new claim or another repo.
 
 ## `qga_pixel`
 
@@ -39,67 +71,82 @@ Hypothesis (two clocks as a picture): **tested, not visible at sculpture distanc
 
 | Field | Meaning |
 |---|---|
-| `theta, phi` | S² cell: cutting-plane tilt (hue class) |
-| `psi` | fiber phase (subpixel scan) |
+| `theta`, `phi` | \(S^2\) cell: cutting-plane tilt (hue class) |
+| `psi` | fiber phase (subpixel scan). Antipode mask is \(\psi+\pi\) on the SLM seed only |
 | `offset` | plane offset (eccentricity / saturation) |
-| `amplitude` | shard length. Not R, G, or B |
-| `shell_s` | trench parameter (Phase 3) |
-| `persist` | mote age (`FluxMote.far_age` analog) |
-| packed | field bit + section (2 bits) |
+| `amplitude` | shard length. Blank mask sets seed amp \(0\). Not R, G, or B |
+| `shell_s` | trench parameter. Do not fold layer into this |
+| `persist` | mote age. Export dumps \(0\) |
+| packed | `field:1 \| section:2 \| layer:8` |
 
-RGB is `rgb_preview()`, a witness projection onto the inner_cone four-bin palette (cyan / gold / orange / magenta). Do not invent a fifth.
+RGB is `rgb_preview()`, a witness projection onto the inner_cone four-bin palette (elliptic cyan \(0.55\) / parabolic gold \(0.10\) / hyperbolic orange \(0.30\) / flat magenta \(0.80\)). No fifth hue. Antipode does not change that preview.
 
-Odd field → visual cone (`+Z`). Even field → feeling cone (`+Y`). Separator = blanking.
+Odd field → visual cone (`+Z`). Even field → feeling cone (`+Y`). Separator = blanking. Elliptic = compact, no pierce, this side of the separator.
+
+After bind: `pos = γ(shell_s)`. Occupancy \(256\). `RAIL_EPS = 0.02R` (collapsed at sculpture distance).
 
 ## Test / run
 
 ```
-make test          # CPU: record, clocks, trench bind
-make headless      # 8 frames, 4k elliptic, static_uploads == 1
-make demo          # demo-tiny-scale window; live_every = 30; gun off; HUD on
-make stills        # five 1280×720 PNGs, no HUD, glow off
-make tick          # locked-eye 6s: 2s even / 2s odd / 2s both → output/mp4/tick.mp4
-make scan          # animation A: persist peak, lock + crop → output/mp4/scan_*.mp4
-make nest-headless # N1 ledger: L=3 ΔR=0.08R sep + energy
-make nest-stills   # N1 locked eye: n0_hull … n1_crop
-make testimony     # stills + 30s orbit of 03_both (body, not clocks)
-make pick          # Phase 6 writer: hemisphere → 32-byte qga_pixel (not the faceplate)
-make slm-loopback  # Phase 5 rung 1: recover dump via vqc_demo loopback
-make slm-export    # Phase 5 rung 2: generic_512 package (after loopback); MASK=none
-make slm-mask      # antipode seed (ψ+π); loopback still on the unmasked blob
-make track-synth      # hull verts → output/track/points.json (bench, not a live still)
-make track-calibrate  # solvePnP → output/track/calib.json
-make track-gaze       # EYE=u,v → output/track/gaze.json (not consumed by Scan A)
-                   # click hemisphere; L lock-to-4; [ ] shell_s; F field bit (packed, not a picture); E export
-                   # cargo run --release --bin pick -- --dump  # no window, writes output/pick/
+make test             # CPU: record, clocks, trench bind
+make headless         # 8 frames, elliptic, static_uploads == 1
+make demo             # tiny window; live_every = 30; gun off
+make stills           # locked-eye PNGs, no HUD, glow off
+make tick             # 6s locked strip (clocks-as-picture: failed)
+make scan             # Animation A: persist peak, lock + crop
+make nest-headless    # N1 ledger
+make nest-stills      # N1 composition stills (picture: failed)
+make testimony        # body stills + orbit of 03_both
+make pick             # writer: hemisphere → output/pick/qga_pixel.bin
+make slm-loopback     # recover dump; BER 0 on unmasked blob
+make slm-export       # generic_512; MASK=none
+make slm-mask         # antipode seed (ψ+π)
+make track-synth      # bench points.json (not a live still)
+make track-calibrate  # solvePnP → calib.json
+make track-gaze       # EYE=u,v → gaze.json (not consumed)
 ```
 
 Sidecar (once, not in the frame loop):
 
 ```
-make export-shell  # PYTHONPATH sibling flux_trajectoid → assets/shell_trench.bin
+make export-shell     # sibling flux_trajectoid → assets/shell_trench.bin
 ```
 
-Sibling checkouts:
+Picker: click hemisphere; `L` lock-to-4; `shell_s`; `F` field bit (packed, not a picture); `E` export.
 
 ```
-~/Projects/qga_engine
-~/Projects/qga_gpu
-~/Projects/flux_trajectoid   # sidecar only
-~/Projects/shellscan         # this crate (currently ~/Projects/graphics)
+cargo run --release --bin pick -- --dump
 ```
+
+SLM mask:
+
+```
+make slm-export MASK=none       # plain package
+make slm-mask                   # antipode seed
+# qga_pixel.bin        = dump
+# qga_pixel_seed.bin   = masked seed
+```
+
+## Attention well (tracker paper)
+
+Default \(\hat E_{\mathrm{def}}=(0,0,1)\), \((\theta,\phi)_{\mathrm{def}}=(0,0)\), \(i_{\mathrm{def}}=40\) (even site nearest \(+\hat z\) on trench `746a79b8…`).
+
+\(\Delta t=1/30\,\mathrm{s}\), \(\alpha_{\min}=3^\circ\), \(T_{\mathrm{off}}=2\,\mathrm{s}\), \(\tau=0.8\,\mathrm{s}\), \(\beta=0.3\). Presence inside the dead zone keeps attention. Loss of blob starts the timer, then leak. Unmatched samples dropped. `locked` ≠ `attention_state`. Faceplate does not read `gaze.json`.
 
 ## Related
 
 | Repo | Role |
 |---|---|
-| [graphics](https://github.com/kinaar8340/graphics) | this crate (Phosphor Loom / `shellscan`) |
+| [graphics](https://github.com/kinaar8340/graphics) | this crate |
 | [qga](https://github.com/kinaar8340/qga) | manuscript |
 | [qga_engine](https://github.com/kinaar8340/qga_engine) | math / sim |
 | [qga_gpu](https://github.com/kinaar8340/qga_gpu) | frame |
 | [inner_cone](https://github.com/kinaar8340/inner_cone) | observer / cones |
-| [flux_trajectoid](https://github.com/kinaar8340/flux_trajectoid) | faceplate |
-| [vqc_demo](https://github.com/kinaar8340/vqc_demo) | later photonic write |
+| [flux_trajectoid](https://github.com/kinaar8340/flux_trajectoid) | faceplate sidecar |
+| [vqc_demo](https://github.com/kinaar8340/vqc_demo) | loopback + SLM package |
+| [vqc_proto](https://github.com/kinaar8340/vqc_proto) | LG / typehead (sibling, not a path-dep) |
+| [wetware_printer](https://github.com/kinaar8340/wetware_printer) | Hopf stylus grower — stay in that crate |
+| [pic](https://github.com/kinaar8340/pic) | RubikConeConduit noun; \(\sqrt{3}-1\) is identity topology, not \(\Delta R\) |
 
 ## License
 
