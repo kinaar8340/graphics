@@ -12,8 +12,15 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from vision_tracker import (  # noqa: E402
+    ALPHA_MIN,
+    E_DEF,
+    I_DEF,
     N_OCCUPANCY,
+    T_OFF,
+    TAU,
+    AttentionWell,
     camera_center,
+    default_site,
     gamma,
     load_trench_xyz,
     nearest_site,
@@ -64,3 +71,58 @@ def test_nearest_site_is_even_occupancy():
     local = nearest_site(E / np.linalg.norm(E), even)
     assert idx[local] % 2 == 0
     assert local == 3
+
+
+def test_i_def_is_even_nearest_plus_z():
+    path = ROOT / "assets" / "shell_trench.bin"
+    _verts, samples = read_shsc(path)
+    i = default_site(samples)
+    assert i == I_DEF
+    assert i % 2 == 0
+    assert i == 40
+
+
+def test_unmatched_does_not_slam():
+    well = AttentionWell()
+    off = np.array([0.2, 0.0, 1.0])
+    g = well.step(off, 1.0 / 30)
+    assert g["locked"] is True
+    assert g["attention_state"] is True
+    held = np.array(well.E_hat)
+    g2 = well.step(None, 0.5)
+    assert g2["locked"] is False
+    assert g2["attention_state"] is True
+    assert np.allclose(well.E_hat, held)
+    assert g2["persist"] == 0.0
+    assert g2["layer"] == 0
+
+
+def test_presence_in_dead_zone_keeps_attention():
+    well = AttentionWell()
+    well.step(E_DEF, 1.0 / 30)
+    wobble = np.array([np.sin(ALPHA_MIN * 0.3), 0.0, np.cos(ALPHA_MIN * 0.3)])
+    g = well.step(wobble, 1.0 / 30)
+    assert g["locked"] is True
+    assert g["attention_state"] is True
+    assert g["drift"] is False
+
+
+def test_timeout_then_leak_to_well():
+    well = AttentionWell()
+    meas = np.array([0.6, 0.0, 0.8])
+    well.step(meas, 1.0 / 30)
+    dt = 1.0 / 30
+    steps = int(T_OFF / dt) + 5
+    last = None
+    for _ in range(steps):
+        last = well.step(None, dt)
+    assert last["locked"] is False
+    assert last["attention_state"] is False
+    leak_n = int(3 * TAU / dt)
+    for _ in range(leak_n):
+        last = well.step(None, dt)
+    assert last["drift"] is True
+    assert last["site"] == I_DEF
+    assert last["alpha_from_default"] <= ALPHA_MIN
+    assert np.allclose(well.E_hat, E_DEF, atol=1e-6)
+    assert last["site"] % 2 == 0

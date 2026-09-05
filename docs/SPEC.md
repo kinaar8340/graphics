@@ -70,7 +70,7 @@ Do not spend another commit proving the same collapse.
 | Gun | Off |
 | Animation A (scan head) | Unfrozen — hypothesis. See [SCAN.md](SCAN.md). |
 | Nested shells / ShellCube | Falsified in composition, do not re-prove. Packed `layer:8` stays. See [NEST.md](NEST.md). |
-| `vision_tracker` | Calibration sidecar only (`6dea5f2`). Bench RMS is the solver, not a lens. Scan A does not consume `site`. See [VISION.md](VISION.md). |
+| `vision_tracker` | Calibration + well `step()` in the sidecar. Bench RMS is the solver, not a lens. Scan A does not consume `site`. See [VISION.md](VISION.md). |
 
 `make scan` is the only unfrozen faceplate verb: one head on layer 0, other layers dark. Tracker writes `calib.json` / `gaze.json`; the faceplate does not read them. `--webcam` stays off. Do not fold `gaze.json` into `pick` or `demo`. N1 is a ledger, not a radial graphic. Do not raise \(\Delta R\). Do not shrink splat. Do not instance more shells. Do not grow a 33rd byte. `LF` still 0. Do not open `preview_montage.png`. Do not fold the phase stack into `pick` or `demo`. Do not treat `field=1` as a visible tick. Do not grow \(\varepsilon\) or turn the gun on. B (picker \(\psi\)) and C (two heads) are not this target. Nothing else unfreezes.
 

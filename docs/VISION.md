@@ -4,7 +4,7 @@
 
 **Logged.** Tip `6dea5f2` is calibration only. `--webcam` stays off. No pointer mesh. No `LF`. Faceplate does not read `gaze.json`. Scan A does not consume `site`. Nothing else unfreezes.
 
-Faceplate may read `gaze.json` only when you unfreeze **Scan A consumes site**. Until that line exists, calibration is the whole implementation.
+Faceplate may read `gaze.json` only when you unfreeze **Scan A consumes site**. Webcam stays off. The sidecar may run `step(meas|None, dt)`; the faceplate still does not consume `site`.
 
 ## Claim
 
@@ -19,6 +19,9 @@ Faceplate may read `gaze.json` only when you unfreeze **Scan A consumes site**. 
 | `make track-synth` `uv` is this sculpture’s pose | **Not a device fact** until `uv` comes from a still of that camera |
 | Gaze-driven Scan A head on \(\gamma\), layer 0, `LF=0`, reads as a pointer. | Hypothesis — **not this unfreeze** |
 | Eyeline lock makes the two-clock or radial stack read without a caption. | **Not claimed.** Clocks and N1 already failed at `4.2`. |
+| Blob centroid maps through \(K,R,t\) to \(\hat E\in S^2\). Unmatched samples are dropped. | Model |
+| `attention_state` from periodic compare-to-last; false starts a leak to \(\hat E_{\mathrm{def}}\). | **Software fact** (`AttentionWell.step`) |
+| Drift-to-well is a usable pointer without pupils. | Hypothesis — faceplate still must not consume `site` |
 
 v1 is **eyeline lock from head/eye position**, not pupil gaze. Pupils are a later device fact.
 
@@ -100,6 +103,62 @@ Rate, later: 30 Hz names the clock; `LF` stays 0.
 
 Privacy: log pose, not faces, if this ever leaves the bench.
 
+## Well / attention (sidecar filter)
+
+Still tracker paper. Blob is a coarse measurement. The front of the ball is a well. `attention_state` is the gate. Perfection is not the sensor’s job. Drift is. Scan A does not consume `site`.
+
+Default well = visual cone \(+\hat z\) in the observer frame `pick` already uses (sketch visual, `Field::Odd`).
+
+\[
+\hat E_{\mathrm{def}}=(0,0,1),\qquad
+(\theta,\phi)_{\mathrm{def}}=(0,0),\qquad
+i_{\mathrm{def}}=40
+\]
+
+\(i_{\mathrm{def}}\) is the even occupancy site nearest \(+\hat z\) on `assets/shell_trench.bin` (`trench_sha256=746a79b8…`). A param, not a net.
+
+Normalize in the sculpture frame, then error. Do not form an error in camera pixels. Unmatched (no blob, two blobs, RMS reject, behind the hull): **drop the sample**. No value, no update. Do not slam \(\hat E\) to the last good pixel.
+
+\[
+\alpha=\arccos(\hat E\cdot\hat E_{\mathrm{def}})
+\]
+
+**Policy:** presence inside the dead zone keeps `attention_state=true` (a quiet viewer does not slide home). Loss of blob starts \(T_{\mathrm{off}}\), then `attention_state=false` and leak. `locked` = accepted blob this sample. `attention_state` is the well’s gate. They are not the same bit.
+
+### Four numbers
+
+| Symbol | Value | Role |
+|---|---|---|
+| \(\Delta t\) | \(1/30\,\mathrm{s}\) | Sample period. Names present, not `LF`. |
+| \(\alpha_{\min}\) | \(3^\circ\) | Dead zone. Below this, blob error is trunk noise. |
+| \(T_{\mathrm{off}}\) | \(2\,\mathrm{s}\) | Dead-man. No accepted sample → attention false. |
+| \(\tau\) | \(0.8\,\mathrm{s}\) | Leak time constant. \(\lambda=\Delta t/\tau\). |
+| \(\beta\) | \(0.3\) | Light filter while attention is true. |
+
+When `attention_state=false`:
+
+\[
+\hat E_{k+1}
+=
+\mathrm{normalize}\bigl(
+\hat E_k + \lambda\,(\hat E_{\mathrm{def}}-\hat E_k)
+\bigr)
+\]
+
+When `attention_state=true`:
+
+\[
+\hat E_{k+1}
+=
+\mathrm{normalize}\bigl(
+(1-\beta)\hat E_k + \beta\,\hat E_{\mathrm{meas}}
+\bigr)
+\]
+
+Site last: even, layer 0, persist 0. After drift, if \(\alpha\le\alpha_{\min}\), snap to \(i_{\mathrm{def}}\).
+
+`step(meas|None, dt) -> gaze` is the whole filter. Not an adaptive net. Not a cursor. Not a reopen of clocks / N1. Not “thermal is true gaze.”
+
 ## Makefile
 
 ```
@@ -116,3 +175,4 @@ make track-gaze EYE=640,360
 - Claim clocks or N1 layers are now visible
 - Store faces — only \(\theta,\phi,E,site\)
 - Fold `gaze.json` into `pick` or `demo` until **Scan A consumes site**
+- Draw the well or treat `attention_state` as a second necklace
