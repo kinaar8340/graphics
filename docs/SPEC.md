@@ -55,7 +55,8 @@ Do not spend another commit proving the same collapse.
 3. **Shipped.** Bind + window. Offline trench, 4k elliptic, `pos = γ(shell_s)`. Headless 8-frame: `SU=1`, `LF=0`, `PS=0`, `even=1347.844`, `odd=1872.004`, `both=3219.883`. `demo-tiny`-scale window. Gun off.  
 4. **Closed.** Testimony. Faceplate pass, clock fail, gun deferred. Occupancy + rails + locked tick (`tick.mp4`) did not make clocks a picture. `LF=0`. See [TESTIMONY.md](TESTIMONY.md).  
 5. **Closed (v1).** Sidecar write. Loopback BER 0; `generic_512` package (`shell_s=0.5`, trench `746a79b8…`). HITL not v1. Tip `2e1fe9c`. See [PHASE5.md](PHASE5.md). Not a window. Not a gun.  
-6. **Picker (writer).** Sibling binary `make pick`. Emits a 32-byte `QgaPixel` (and JSON). Hemisphere sets \((\theta,\phi)\). Lock-to-4 on. One optional fiber arc. Does not own the faceplate window. Not a Philogb restyle. Not a second loom.
+6. **Picker (writer).** Sibling binary `make pick`. Emits a 32-byte `QgaPixel` (and JSON). Hemisphere sets \((\theta,\phi)\). Lock-to-4 on. One optional fiber arc. Does not own the faceplate window. Not a Philogb restyle. Not a second loom.  
+7. **Paper only (N0).** Nested faceplates. RubikConeConduit / ShellCube noun. \(L=1\) until \(\Delta R\) vs splat is tested. See [NEST.md](NEST.md). Not a thicker \(\gamma\).
 
 ## Freeze (after Phase 5 v1)
 
@@ -68,8 +69,9 @@ Do not spend another commit proving the same collapse.
 | HITL / Pluto / VPL-HW20A | Not v1 |
 | Gun | Off |
 | Animation A (scan head) | Unfrozen — hypothesis. See [SCAN.md](SCAN.md). |
+| Nested shells / ShellCube | Paper only (N0). \(L=1\). See [NEST.md](NEST.md). |
 
-`make scan` is the unfrozen verb. `LF` still 0. Do not open `preview_montage.png`. Do not fold the phase stack into `pick` or `demo`. Do not treat `field=1` as a visible tick. Do not grow \(\varepsilon\), shrink splat, or turn the gun on. B (picker \(\psi\)) and C (two heads) are not this target.
+`make scan` is the unfrozen verb. \(L=1\). `LF` still 0. Do not instance confocal trenches. Do not pack `layer` bits. Do not grow a 33rd byte. Do not open `preview_montage.png`. Do not fold the phase stack into `pick` or `demo`. Do not treat `field=1` as a visible tick. Do not grow \(\varepsilon\), shrink splat, or turn the gun on. B (picker \(\psi\)) and C (two heads) are not this target. Nested unfreeze is one line: **N1**, new claim label first.
 
 ## First scene (Phase 3, shipped)
 

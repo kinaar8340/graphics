@@ -9,7 +9,7 @@
 //! amplitude f32 quaternion-shard length analog; not R,G, or B
 //! shell_s f32   trench parameter (faceplate binding; unused until Phase 3)
 //! persist f32   mote age (FluxMote.far_age analog)
-//! packed u32    field:1 | section:2 | unused
+//! packed u32    field:1 | section:2 | unused (layer:8 is N0 paper; do not pack)
 //! ```
 //!
 //! FluxMote map (documentation, not a dep):

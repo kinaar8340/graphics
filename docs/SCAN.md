@@ -104,3 +104,5 @@ Stop and re-freeze if any of these:
 - `G`, fibers, or a smaller splat
 
 Pass is narrow: lock view shows a traveling bright on the scribble; crop shows a comet on the trench. Then animation A is a software fact plus a weak hypothesis pass. Next would be named separately (B is picker-only \(\psi\); C is two heads). Not this target.
+
+Nested shells ([NEST.md](NEST.md)) are paper for where this head may step next (\(\ell\) as well as \(s\)). Keep \(L=1\). Do not walk a radial stack tonight.
