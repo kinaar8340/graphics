@@ -1,7 +1,8 @@
-.PHONY: test spec check export-shell headless demo stills testimony tick scan nest-headless nest-stills pick slm-loopback slm-export track-synth track-calibrate track-gaze
+.PHONY: test spec check export-shell headless demo stills testimony tick scan nest-headless nest-stills pick slm-loopback slm-export slm-mask track-synth track-calibrate track-gaze
 
 TRACK_PY := $(shell test -x .venv/bin/python && echo .venv/bin/python || echo python3)
 EYE ?= 640,360
+MASK ?= none
 
 test:
 	cargo test
@@ -32,7 +33,12 @@ slm-loopback:
 
 slm-export:
 	cargo run --release --bin pick -- --dump
-	python3 scripts/export_slm_pixel.py --preset generic_512
+	python3 scripts/export_slm_pixel.py --preset generic_512 --mask $(MASK)
+
+# Sign mask on the SLM seed only. Loopback stays on the unmasked blob.
+slm-mask:
+	cargo run --release --bin pick -- --dump
+	python3 scripts/export_slm_pixel.py --preset generic_512 --mask antipode
 
 # vision_tracker. Calibration sidecar. No window. No gun. Scan A does not consume site yet.
 track-synth:

@@ -2,7 +2,7 @@
 
 The red cells are not a broken phosphor. They are sign. On this machine sign is either a \(\pi\) shift on the same Hopf fiber or a write into the orthogonal cone. Those two must not be mixed. The mask is different for each.
 
-**Paper.** Faceplate does not draw this. `gaze.json` still does not move Scan A. Unfreeze is one line: a mask flag on the SLM stack already written by `export_slm_pixel.py`. Until then generic_512 stays elliptic, persist 0, no RGB in the phase map.
+**Wired (software fact).** `--mask {none,antipode,blank,nappe}` on the SLM seed only. Loopback stays on the unmasked 32 bytes. Faceplate does not draw this. Scan A does not consume `site`. `LF=0`.
 
 ## Claim
 
@@ -12,7 +12,7 @@ The red cells are not a broken phosphor. They are sign. On this machine sign is 
 | \(h(-q)=h(q)\). Same \((\theta,\phi)\), \(\psi\mapsto\psi+\pi\). Intensity witness cannot see it. Phase can. | Theorem / Model |
 | Imaginary-axis flip (\(i\mapsto -i\)) is the other nappe: feeling \(+\hat y\), even field, hue \(0.30\). | Model (already frozen) |
 | Witness RGB treating \(-q\) as the same cyan bead while the SLM still carries \(\pi\) looks like a dirty cone. | Software fact of the double cover, not a need for more shells |
-| Red product on same Hopf base → \(\psi+\pi\) (or SLM slice \(+\pi\)). Other nappe → field bit / omit from elliptic package. Unmatched / issue → amp \(0\). | Software fact — **not wired**. See freeze. |
+| `export_slm_pixel.py --mask {none,antipode,blank,nappe}` writes a sign flag on the SLM stack. `none` is the elliptic-plain package. Antipode is \(\psi+\pi\) on the seed only. Blank is `amplitude=0`. Nappe is omit-from-elliptic (no section flip). `rgb_preview` of the dumped blob does not change. | **Software fact** |
 
 ## What the red cells are
 
@@ -70,9 +70,15 @@ Lost attention leaks to \(\hat E_{\mathrm{def}}=(0,0,1)\), site \(40\). It does 
 - Let unmatched blobs become \(\psi+\pi\)
 - Mix the two red readings on one mask
 
-## If unfrozen later
+## Wired
 
-One software fact, no new sculpture. Lives in `export_slm_pixel.py` as a mask flag on the stack already written. Faceplate still does not need to draw it.
+```
+make slm-export MASK=none       # elliptic-plain; sign.mask=none
+make slm-mask                   # antipode seed; loopback still unmasked
+make slm-loopback               # original 32 bytes, BER 0
+```
+
+`qga_pixel.bin` is the unmasked dump. `qga_pixel_seed.bin` is the masked seed. Manifest carries `"sign": {...}`.
 
 ```
 red product on same Hopf base → ψ += π  (or SLM slice += π)

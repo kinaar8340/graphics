@@ -29,7 +29,7 @@ This is a **Model** and a **Software fact**. It is not a vacuum tube and not a t
 - [ ] Animation A — scan head on \(\gamma(s)\). Hypothesis. See [docs/SCAN.md](docs/SCAN.md).
 - [x] Phase 7 — nested ShellCube faceplates. **N1 closed.** Hypothesis tested: not visible in composition. Tip `95175f3`. See [docs/NEST.md](docs/NEST.md).
 - [ ] `vision_tracker` — calibration + well `step()`. Bench `rms_px` is the solver, not a lens. Scan A does not consume `site`. See [docs/VISION.md](docs/VISION.md).
-- [ ] Sign mask — paper. Antipode is \(\psi+\pi\) or blanking, not a nested nappe. See [docs/SIGN.md](docs/SIGN.md).
+- [x] Sign mask — SLM seed `--mask {none,antipode,blank,nappe}`. Loopback unmasked. Scan A does not consume `site`. See [docs/SIGN.md](docs/SIGN.md).
 
 Hypothesis (two clocks as a picture): **tested, not visible at sculpture distance.** Nested layers in composition: **tested, not visible.** See [docs/TESTIMONY.md](docs/TESTIMONY.md), [docs/NEST.md](docs/NEST.md). Splat vs `ε`: [docs/LAYOUT.md](docs/LAYOUT.md).
 
@@ -65,7 +65,8 @@ make nest-stills   # N1 locked eye: n0_hull … n1_crop
 make testimony     # stills + 30s orbit of 03_both (body, not clocks)
 make pick          # Phase 6 writer: hemisphere → 32-byte qga_pixel (not the faceplate)
 make slm-loopback  # Phase 5 rung 1: recover dump via vqc_demo loopback
-make slm-export    # Phase 5 rung 2: generic_512 package (after loopback)
+make slm-export    # Phase 5 rung 2: generic_512 package (after loopback); MASK=none
+make slm-mask      # antipode seed (ψ+π); loopback still on the unmasked blob
 make track-synth      # hull verts → output/track/points.json (bench, not a live still)
 make track-calibrate  # solvePnP → output/track/calib.json
 make track-gaze       # EYE=u,v → output/track/gaze.json (not consumed by Scan A)

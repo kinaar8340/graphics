@@ -2,7 +2,8 @@
 """Compose pick --dump with vqc_demo loopback / flux_trajectoid SLM.
 
 No Rust path-dep. No VQC path-dep on qga_gpu. Not a projector. Not a gun.
-Sign mask (antipode ψ+π vs nappe / blanking) is paper: docs/SIGN.md. Not wired.
+Sign mask is wired: --mask {none,antipode,blank,nappe} on the SLM seed only.
+Loopback stays on the unmasked 32-byte blob. Scan A does not consume site.
 """
 
 from __future__ import annotations
@@ -19,6 +20,8 @@ HOME = Path.home()
 BLOB = ROOT / "output" / "pick" / "qga_pixel.bin"
 TRENCH = ROOT / "assets" / "shell_trench.bin"
 SECTION = ("elliptic", "parabolic", "hyperbolic", "flat-pockets")
+MASKS = ("none", "antipode", "blank", "nappe")
+PI = 3.141592653589793
 
 
 def parse_pixel(raw: bytes) -> dict:
@@ -44,6 +47,55 @@ def parse_pixel(raw: bytes) -> dict:
         "packed": packed,
         "n_bytes": 32,
     }
+
+
+def pack_pixel(fields: dict) -> bytes:
+    sec = SECTION.index(fields["section"])
+    packed = (
+        (int(fields["field"]) & 1)
+        | ((sec & 3) << 1)
+        | ((int(fields.get("layer", 0)) & 0xFF) << 3)
+    )
+    return struct.pack(
+        "<7fI",
+        float(fields["theta"]),
+        float(fields["phi"]),
+        float(fields["psi"]),
+        float(fields["offset"]),
+        float(fields["amplitude"]),
+        float(fields["shell_s"]),
+        float(fields["persist"]),
+        packed,
+    )
+
+
+def apply_sign_mask(fields: dict, mask: str) -> tuple[dict, dict]:
+    if mask not in MASKS:
+        raise SystemExit(f"unknown mask {mask!r}, expected {MASKS}")
+    seed = dict(fields)
+    meta = {"mask": mask, "applied_to": "slm_seed", "loopback": "unmasked_blob"}
+    if mask == "none":
+        meta["psi_delta"] = 0.0
+        meta["blank"] = False
+        meta["nappe"] = "keep"
+    elif mask == "antipode":
+        seed["psi"] = (float(seed["psi"]) + PI) % (2.0 * PI)
+        meta["psi_delta"] = PI
+        meta["blank"] = False
+        meta["nappe"] = "keep"
+        meta["note"] = "same Hopf base; rgb_preview / section / field / layer unchanged"
+    elif mask == "blank":
+        seed["amplitude"] = 0.0
+        meta["psi_delta"] = 0.0
+        meta["blank"] = True
+        meta["nappe"] = "keep"
+        meta["note"] = "unmatched/issue; amp 0; do not steer into feeling"
+    else:
+        meta["psi_delta"] = 0.0
+        meta["blank"] = False
+        meta["nappe"] = "omit" if seed["section"] == "elliptic" else "even_field"
+        meta["note"] = "orthogonal nappe omitted from elliptic package; section not flipped"
+    return seed, meta
 
 
 def trench_identity(path: Path) -> str:
@@ -80,12 +132,15 @@ def loopback(raw: bytes, fields: dict) -> dict:
     }
 
 
-def export_slm(raw: bytes, fields: dict, out: Path, preset: str) -> dict:
+def export_slm(raw: bytes, fields: dict, out: Path, preset: str, mask: str = "none") -> dict:
     sys.path.insert(0, str(HOME / "Projects" / "flux_trajectoid" / "src"))
     from flux_trajectoid import PhotonSeedAsteroid
 
     out.mkdir(parents=True, exist_ok=True)
-    ast = PhotonSeedAsteroid(raw, seed=42).build(
+    seed_fields, sign = apply_sign_mask(fields, mask)
+    seed_raw = pack_pixel(seed_fields)
+    seed_fields = parse_pixel(seed_raw)
+    ast = PhotonSeedAsteroid(seed_raw, seed=42).build(
         force_stub_flux=True,
         build_3d=True,
         n_shards=4,
@@ -110,6 +165,7 @@ def export_slm(raw: bytes, fields: dict, out: Path, preset: str) -> dict:
             "trench_sha256": ident,
             "lock_to_4": True,
         },
+        "sign": sign,
         "claim": "loadability of a generic_512 phase package; not far-field beauty",
         "not": [
             "projector MP4 on an SLM",
@@ -126,6 +182,8 @@ def export_slm(raw: bytes, fields: dict, out: Path, preset: str) -> dict:
     man_path.write_text(json.dumps(man, indent=2) + "\n")
     (out / "qga_pixel.bin").write_bytes(raw)
     (out / "qga_pixel.json").write_text(json.dumps(fields, indent=2) + "\n")
+    (out / "qga_pixel_seed.bin").write_bytes(seed_raw)
+    (out / "qga_pixel_seed.json").write_text(json.dumps(seed_fields, indent=2) + "\n")
     files = list(getattr(pkg, "files", []) or [])
     return {
         "out_dir": str(out),
@@ -135,6 +193,7 @@ def export_slm(raw: bytes, fields: dict, out: Path, preset: str) -> dict:
         "trench_sha256": ident,
         "files": files,
         "manifest": str(man_path),
+        "sign": sign,
     }
 
 
@@ -153,12 +212,15 @@ def main() -> int:
         action="store_true",
         help="rung 2 only (not the default)",
     )
+    p.add_argument("--mask", choices=MASKS, default="none")
     args = p.parse_args()
     if not args.blob.is_file():
         raise SystemExit(f"missing {args.blob} — run: cargo run --release --bin pick -- --dump")
     raw = args.blob.read_bytes()
     fields = parse_pixel(raw)
     print(json.dumps({"parsed": fields}, indent=2))
+    _seed, sign = apply_sign_mask(fields, args.mask)
+    print(json.dumps({"sign": sign}, indent=2))
 
     if not args.skip_loopback:
         lb = loopback(raw, fields)
@@ -170,7 +232,7 @@ def main() -> int:
         if args.loopback_only:
             return 0
 
-    slm = export_slm(raw, fields, args.out, args.preset)
+    slm = export_slm(raw, fields, args.out, args.preset, mask=args.mask)
     print(json.dumps({"slm": slm}, indent=2))
     return 0
 
