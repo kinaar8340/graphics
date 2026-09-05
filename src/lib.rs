@@ -7,6 +7,7 @@
 pub mod capture;
 pub mod clock;
 pub mod convert;
+pub mod nest;
 pub mod pixel;
 pub mod scan;
 pub mod scene;
@@ -17,4 +18,4 @@ pub use clock::{Field, Phosphor, TwoClock};
 pub use convert::{to_gpu_particle, to_gpu_particle_on};
 pub use pixel::QgaPixel;
 pub use section::{classify_section, SectionKind};
-pub use trench::{Trench, N_MOTES, N_OCCUPANCY, RAIL_EPS};
+pub use trench::{Trench, NEST_DELTA_R, NEST_LAYERS, N_MOTES, N_OCCUPANCY, RAIL_EPS, SPLAT_LOCK};

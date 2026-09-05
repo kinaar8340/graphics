@@ -168,6 +168,58 @@ impl Phosphor {
         p
     }
 
+    /// One confocal layer. `n` even sites, field 0, elliptic. `shell_s` unchanged.
+    pub fn even_layer(n: usize, layer: u8) -> Self {
+        let n = n.max(2);
+        let mut pixels = Vec::with_capacity(n);
+        for i in 0..n {
+            let s = i as f32 / n as f32;
+            let mut p = QgaPixel::new(
+                std::f32::consts::FRAC_PI_2,
+                std::f32::consts::FRAC_PI_2,
+                s * std::f32::consts::TAU,
+                0.4,
+                1.0,
+                Field::Even,
+                s,
+            );
+            p.set_layer(layer);
+            pixels.push(p);
+        }
+        let mut p = Self::new(pixels);
+        p.static_uploads = 1;
+        p
+    }
+
+    /// `L` confocal even-site layers. Same trench table, packed layer bits.
+    pub fn even_layers(n: usize, n_layers: u8) -> Self {
+        let n_layers = n_layers.max(1);
+        let mut pixels = Vec::new();
+        let mut su = 0;
+        for ell in 0..n_layers {
+            let mut layer = Self::even_layer(n, ell);
+            su = layer.static_uploads;
+            pixels.append(&mut layer.pixels);
+        }
+        let mut p = Self::new(pixels);
+        p.static_uploads = su;
+        p
+    }
+
+    pub fn light_persist(&mut self, persist: f32) {
+        for p in &mut self.pixels {
+            p.persist = persist;
+        }
+    }
+
+    pub fn layer_energy(&self, layer: u8) -> f32 {
+        self.pixels
+            .iter()
+            .filter(|p| p.layer() == layer)
+            .map(|p| p.amplitude * p.persist)
+            .sum()
+    }
+
     pub fn tick(&mut self, frame: u32, clock: TwoClock) {
         let field = clock.field(frame);
         self.live_writes += 1;

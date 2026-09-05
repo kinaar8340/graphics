@@ -12,6 +12,7 @@ fn roundtrip_bytes() {
     assert!((q.phi - p.phi).abs() < 1e-6);
     assert_eq!(q.field(), p.field());
     assert_eq!(q.section(), p.section());
+    assert_eq!(q.layer(), 0);
     assert!((q.shell_s - 0.18).abs() < 1e-6);
 }
 
@@ -21,5 +22,6 @@ fn json_names_section_and_field_bit() {
     let j = p.to_json();
     assert!(j.contains("\"section\":\"elliptic\""));
     assert!(j.contains("\"field\":1"));
+    assert!(j.contains("\"layer\":0"));
     assert!(j.contains("\"shell_s\":0.500000"));
 }

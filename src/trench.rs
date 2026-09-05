@@ -18,6 +18,11 @@ pub const N_OCCUPANCY: usize = 256;
 /// Rail offset as a fraction of shell radius (R ≈ 1). Field 0 along ŷ, field 1 along ẑ.
 /// One number. World cone axes, not the camera frame.
 pub const RAIL_EPS: f32 = 0.02;
+/// N1 confocal stack. Radial copies of the same trench table. Not PIC √3−1.
+pub const NEST_LAYERS: u8 = 3;
+pub const NEST_DELTA_R: f32 = 0.08;
+/// Witness splat radius at locked eye 4.2, persist=1, aperture=1. Software fact.
+pub const SPLAT_LOCK: f32 = 0.0315;
 
 /// Contact trench + dim shell skin. Faces are the envelope, not a second phosphor.
 #[derive(Clone, Debug)]

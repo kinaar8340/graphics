@@ -134,6 +134,20 @@ fn even_lap_repeats_energy() {
 }
 
 #[test]
+fn nest_layers_stay_dark() {
+    let mut ph = Phosphor::even_layers(N_OCCUPANCY, 3);
+    apply_scan(&mut ph, 0);
+    assert!(ph
+        .pixels
+        .iter()
+        .filter(|p| p.layer() != 0)
+        .all(|p| p.persist <= 1e-8));
+    assert!(ph.layer_energy(1).abs() < 1e-8);
+    assert!(ph.layer_energy(2).abs() < 1e-8);
+    assert!(ph.layer_energy(0) > 1.0);
+}
+
+#[test]
 fn does_not_call_field_write() {
     let mut ph = Phosphor::on_trench(N_OCCUPANCY);
     let live0 = ph.live_writes;

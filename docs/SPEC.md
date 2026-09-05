@@ -56,7 +56,7 @@ Do not spend another commit proving the same collapse.
 4. **Closed.** Testimony. Faceplate pass, clock fail, gun deferred. Occupancy + rails + locked tick (`tick.mp4`) did not make clocks a picture. `LF=0`. See [TESTIMONY.md](TESTIMONY.md).  
 5. **Closed (v1).** Sidecar write. Loopback BER 0; `generic_512` package (`shell_s=0.5`, trench `746a79b8…`). HITL not v1. Tip `2e1fe9c`. See [PHASE5.md](PHASE5.md). Not a window. Not a gun.  
 6. **Picker (writer).** Sibling binary `make pick`. Emits a 32-byte `QgaPixel` (and JSON). Hemisphere sets \((\theta,\phi)\). Lock-to-4 on. One optional fiber arc. Does not own the faceplate window. Not a Philogb restyle. Not a second loom.  
-7. **Paper only (N0).** Nested faceplates. RubikConeConduit / ShellCube noun. \(L=1\) until \(\Delta R\) vs splat is tested. See [NEST.md](NEST.md). Not a thicker \(\gamma\).
+7. **N1 closed.** Nested faceplates. Ledger pass (`sep=0.080`, energy 256×3). Picture fail: thicker necklace / one ribbon. \(\Delta R=0.08R\) lost as a picture. Do not lower it. See [NEST.md](NEST.md).
 
 ## Freeze (after Phase 5 v1)
 
@@ -69,9 +69,9 @@ Do not spend another commit proving the same collapse.
 | HITL / Pluto / VPL-HW20A | Not v1 |
 | Gun | Off |
 | Animation A (scan head) | Unfrozen — hypothesis. See [SCAN.md](SCAN.md). |
-| Nested shells / ShellCube | Paper only (N0). \(L=1\). See [NEST.md](NEST.md). |
+| Nested shells / ShellCube | **N1 closed.** Ledger pass, picture fail. Do not lower \(\Delta R\). See [NEST.md](NEST.md). |
 
-`make scan` is the unfrozen verb. \(L=1\). `LF` still 0. Do not instance confocal trenches. Do not pack `layer` bits. Do not grow a 33rd byte. Do not open `preview_montage.png`. Do not fold the phase stack into `pick` or `demo`. Do not treat `field=1` as a visible tick. Do not grow \(\varepsilon\), shrink splat, or turn the gun on. B (picker \(\psi\)) and C (two heads) are not this target. Nested unfreeze is one line: **N1**, new claim label first.
+`make scan` remains the unfrozen animation. N1 nested stack is a ledger (packed `layer`, \(\Delta R=0.08R\)) and a failed picture. Do not lower \(\Delta R\). Do not shrink splat. Do not add shells 3…255. Do not grow a 33rd byte. `LF` still 0. Do not open `preview_montage.png`. Do not fold the phase stack into `pick` or `demo`. Do not treat `field=1` as a visible tick. Do not grow \(\varepsilon\) or turn the gun on. B (picker \(\psi\)) and C (two heads) are not this target.
 
 ## First scene (Phase 3, shipped)
 

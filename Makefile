@@ -1,4 +1,4 @@
-.PHONY: test spec check export-shell headless demo stills testimony tick scan pick slm-loopback slm-export
+.PHONY: test spec check export-shell headless demo stills testimony tick scan nest-headless nest-stills pick slm-loopback slm-export
 
 test:
 	cargo test
@@ -34,6 +34,15 @@ slm-export:
 stills:
 	mkdir -p output/png
 	cargo run --release --bin shellscan -- --stills --width 1280 --height 720
+
+# N1 confocal stack. Ledger first, then locked-eye stills. L=3, ΔR=0.08R. LF=0.
+nest-headless:
+	mkdir -p output/nest
+	cargo run --release --bin shellscan -- --nest-headless
+
+nest-stills:
+	mkdir -p output/png
+	cargo run --release --bin shellscan -- --nest-stills --width 1280 --height 720
 
 # Animation A. Persist peak on even sites. Locked eye + 04 crop. Glow off. HUD off. LF=0.
 scan:

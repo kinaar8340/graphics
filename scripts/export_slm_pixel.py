@@ -28,6 +28,7 @@ def parse_pixel(raw: bytes) -> dict:
     )
     field = packed & 1
     section = SECTION[(packed >> 1) & 3]
+    layer = (packed >> 3) & 0xFF
     return {
         "theta": theta,
         "phi": phi,
@@ -38,6 +39,7 @@ def parse_pixel(raw: bytes) -> dict:
         "persist": persist,
         "field": field,
         "section": section,
+        "layer": layer,
         "packed": packed,
         "n_bytes": 32,
     }

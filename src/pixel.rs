@@ -9,7 +9,7 @@
 //! amplitude f32 quaternion-shard length analog; not R,G, or B
 //! shell_s f32   trench parameter (faceplate binding; unused until Phase 3)
 //! persist f32   mote age (FluxMote.far_age analog)
-//! packed u32    field:1 | section:2 | unused (layer:8 is N0 paper; do not pack)
+//! packed u32    field:1 | section:2 | layer:8 | unused
 //! ```
 //!
 //! FluxMote map (documentation, not a dep):
@@ -29,6 +29,8 @@ const _: () = assert!(std::mem::align_of::<QgaPixel>() >= 4);
 const FIELD_BIT: u32 = 0b1;
 const SECTION_SHIFT: u32 = 1;
 const SECTION_MASK: u32 = 0b11;
+const LAYER_SHIFT: u32 = 3;
+const LAYER_MASK: u32 = 0xff;
 
 #[repr(C)]
 #[derive(Clone, Copy, Debug, Pod, Zeroable)]
@@ -85,6 +87,15 @@ impl QgaPixel {
         self.packed = (self.packed & !(SECTION_MASK << SECTION_SHIFT)) | (bits << SECTION_SHIFT);
     }
 
+    pub fn layer(self) -> u8 {
+        ((self.packed >> LAYER_SHIFT) & LAYER_MASK) as u8
+    }
+
+    pub fn set_layer(&mut self, layer: u8) {
+        let bits = (layer as u32) & LAYER_MASK;
+        self.packed = (self.packed & !(LAYER_MASK << LAYER_SHIFT)) | (bits << LAYER_SHIFT);
+    }
+
     /// Plane normal from (θ, φ). Tilt is hue class; offset is eccentricity.
     pub fn plane_normal(self) -> Vec3 {
         let (st, ct) = self.theta.sin_cos();
@@ -101,10 +112,14 @@ impl QgaPixel {
         stereographic(self.hopf_q(), 1.0)
     }
 
-    /// Bound faceplate position. Occupancy site on γ, plus one rail:
-    /// field 0 → γ + ε ŷ, field 1 → γ + ε ẑ. Hopf fields unchanged.
+    /// Bound faceplate position. Occupancy site on γ, plus layer gap along
+    /// local outward normal, plus one rail: field 0 → +ε ŷ, field 1 → +ε ẑ.
+    /// `shell_s` is not folded. Hopf fields unchanged. Layer 0 is the old bind.
     pub fn bind_shell(self, trench: &Trench) -> Vec3 {
-        trench.gamma(self.shell_s) + self.field().cone_axis() * crate::trench::RAIL_EPS
+        let g = trench.gamma(self.shell_s);
+        let rhat = trench.normal(self.shell_s);
+        let ell = self.layer() as f32 * crate::trench::NEST_DELTA_R;
+        g + rhat * ell + self.field().cone_axis() * crate::trench::RAIL_EPS
     }
 
     pub fn pos(self, trench: Option<&Trench>) -> Vec3 {
@@ -166,7 +181,7 @@ impl QgaPixel {
 
     pub fn to_json(self) -> String {
         format!(
-            "{{\"theta\":{:.6},\"phi\":{:.6},\"psi\":{:.6},\"offset\":{:.6},\"amplitude\":{:.6},\"shell_s\":{:.6},\"persist\":{:.6},\"field\":{},\"section\":\"{}\"}}\n",
+            "{{\"theta\":{:.6},\"phi\":{:.6},\"psi\":{:.6},\"offset\":{:.6},\"amplitude\":{:.6},\"shell_s\":{:.6},\"persist\":{:.6},\"field\":{},\"section\":\"{}\",\"layer\":{}}}\n",
             self.theta,
             self.phi,
             self.psi,
@@ -175,7 +190,8 @@ impl QgaPixel {
             self.shell_s,
             self.persist,
             self.field().bit(),
-            self.section().name()
+            self.section().name(),
+            self.layer()
         )
     }
 }

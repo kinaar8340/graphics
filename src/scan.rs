@@ -2,6 +2,7 @@
 //! Not a gun. Not configuration C (two heads).
 
 use crate::clock::{Field, Phosphor};
+use crate::pixel::QgaPixel;
 use crate::trench::N_OCCUPANCY;
 
 pub const SCAN_K_TAIL: usize = 8;
@@ -54,36 +55,53 @@ pub fn tail_index(head_i: usize, k: usize) -> usize {
     (head_i + n - SCAN_STRIDE * k) % n
 }
 
-/// Direct persist assignment. Does not call `Phosphor::tick`.
+/// Direct persist assignment on layer 0 only. Does not call `Phosphor::tick`.
+/// Other layers stay dark. Do not chase three heads.
 pub fn apply_scan(ph: &mut Phosphor, head_i: usize) {
     apply_scan_params(ph, head_i, SCAN_K_TAIL, SCAN_DELTA);
 }
 
+fn layer0_indices(pixels: &[QgaPixel]) -> Vec<usize> {
+    pixels
+        .iter()
+        .enumerate()
+        .filter(|(_, p)| p.layer() == 0)
+        .map(|(i, _)| i)
+        .collect()
+}
+
 pub fn apply_scan_params(ph: &mut Phosphor, head_i: usize, k_tail: usize, delta: f32) {
-    let n = ph.pixels.len();
     for p in &mut ph.pixels {
         p.persist = 0.0;
     }
+    let idx = layer0_indices(&ph.pixels);
+    let n = idx.len();
     if n == 0 {
         return;
     }
     let head = (head_i % n) & !1;
-    if let Some(p) = ph.pixels.get_mut(head) {
-        p.persist = 1.0;
+    if let Some(&i) = idx.get(head) {
+        ph.pixels[i].persist = 1.0;
     }
     let mut acc = 1.0;
     for k in 1..=k_tail {
         acc *= delta;
-        let i = (head + n - SCAN_STRIDE * k) % n;
-        if let Some(p) = ph.pixels.get_mut(i) {
-            p.persist = acc;
+        let t = (head + n - SCAN_STRIDE * k) % n;
+        if let Some(&i) = idx.get(t) {
+            ph.pixels[i].persist = acc;
         }
     }
 }
 
 pub fn measure(ph: &Phosphor, t: u32, head_i: usize, k_tail: usize) -> ScanEnergy {
-    let n = ph.pixels.len();
-    let head = if n == 0 { 0 } else { (head_i % n) & !1 };
+    let idx = layer0_indices(&ph.pixels);
+    let n = idx.len();
+    let head_slot = if n == 0 {
+        0
+    } else {
+        (head_i as usize % n) & !1
+    };
+    let head = idx.get(head_slot).copied().unwrap_or(0);
     let mut energy_head = 0.0;
     let mut energy_tail = 0.0;
     let mut energy_other = 0.0;
@@ -91,7 +109,9 @@ pub fn measure(ph: &Phosphor, t: u32, head_i: usize, k_tail: usize) -> ScanEnerg
         let e = p.amplitude * p.persist;
         if i == head {
             energy_head += e;
-        } else if (1..=k_tail).any(|k| tail_index(head, k) == i) {
+        } else if n > 0
+            && (1..=k_tail).any(|k| idx.get((head_slot + n - SCAN_STRIDE * k) % n) == Some(&i))
+        {
             energy_tail += e;
         } else {
             energy_other += e;

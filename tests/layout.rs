@@ -21,4 +21,8 @@ fn packed_field_and_section_roundtrip() {
     assert_eq!(p.field(), Field::Even);
     // Even classifies against +Y; n ≈ (0.3 sin, 0, 0.3 cos) is hyperbolic vs Y.
     assert_eq!(p.section(), SectionKind::Hyperbolic);
+    p.set_layer(2);
+    assert_eq!(p.layer(), 2);
+    assert_eq!(p.field(), Field::Even);
+    assert_eq!(p.section(), SectionKind::Hyperbolic);
 }

@@ -27,7 +27,7 @@ This is a **Model** and a **Software fact**. It is not a vacuum tube and not a t
 - [x] Phase 5 — **v1 closed.** Sidecar: loopback BER 0; `generic_512` (`shell_s=0.5`, trench `746a79b8…`). HITL not v1. Tip `2e1fe9c`. Not a gun.
 - [x] Phase 6 — picker: writes 32-byte `qga_pixel` (`make pick`). Not a second loom.
 - [ ] Animation A — scan head on \(\gamma(s)\). Hypothesis. See [docs/SCAN.md](docs/SCAN.md).
-- [ ] Phase 7 — nested ShellCube faceplates. **N0 paper only.** \(L=1\) until \(\Delta R\) vs splat is tested. See [docs/NEST.md](docs/NEST.md).
+- [x] Phase 7 — nested ShellCube faceplates. **N1 closed.** Ledger pass (`sep=0.080`). Picture fail (thicker necklace / ribbon). \(\Delta R=0.08R\) lost. See [docs/NEST.md](docs/NEST.md).
 
 Hypothesis (two clocks as a picture): **tested, not visible at sculpture distance.** See [docs/TESTIMONY.md](docs/TESTIMONY.md). Splat vs `ε`: [docs/LAYOUT.md](docs/LAYOUT.md).
 
@@ -58,6 +58,8 @@ make demo          # demo-tiny-scale window; live_every = 30; gun off; HUD on
 make stills        # five 1280×720 PNGs, no HUD, glow off
 make tick          # locked-eye 6s: 2s even / 2s odd / 2s both → output/mp4/tick.mp4
 make scan          # animation A: persist peak, lock + crop → output/mp4/scan_*.mp4
+make nest-headless # N1 ledger: L=3 ΔR=0.08R sep + energy
+make nest-stills   # N1 locked eye: n0_hull … n1_crop
 make testimony     # stills + 30s orbit of 03_both (body, not clocks)
 make pick          # Phase 6 writer: hemisphere → 32-byte qga_pixel (not the faceplate)
 make slm-loopback  # Phase 5 rung 1: recover dump via vqc_demo loopback

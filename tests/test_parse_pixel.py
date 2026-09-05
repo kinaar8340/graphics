@@ -37,6 +37,7 @@ def test_parse_matches_pick_json():
         "flat-pockets",
     )
     assert fields["field"] in (0, 1)
+    assert fields.get("layer", 0) == 0
     theta, phi, psi, offset, amp, shell_s, persist, packed = struct.unpack("<7fI", raw)
     assert packed == fields["packed"]
     assert abs(theta - fields["theta"]) < 1e-6

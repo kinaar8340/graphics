@@ -11,8 +11,10 @@ use shellscan::scan::{
     apply_scan, energy_json, head_index, measure, odd_sites_dark, SCAN_DELTA, SCAN_EVEN_LAP,
     SCAN_FRAMES, SCAN_I0, SCAN_K_TAIL,
 };
+use shellscan::nest::{self, NEST_N};
 use shellscan::{
-    capture, scene, to_gpu_particle_on, Field, Phosphor, Trench, TwoClock, N_OCCUPANCY,
+    capture, scene, to_gpu_particle_on, Field, Phosphor, Trench, TwoClock, NEST_DELTA_R,
+    NEST_LAYERS, N_OCCUPANCY, SPLAT_LOCK,
 };
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
@@ -35,6 +37,8 @@ struct Args {
     orbit: bool,
     tick: bool,
     scan: bool,
+    nest_headless: bool,
+    nest_stills: bool,
     width: u32,
     height: u32,
 }
@@ -46,6 +50,8 @@ fn parse_args() -> Args {
     let mut orbit = false;
     let mut tick = false;
     let mut scan = false;
+    let mut nest_headless = false;
+    let mut nest_stills = false;
     let mut width = 0;
     let mut height = 0;
     let mut it = std::env::args().skip(1);
@@ -68,6 +74,14 @@ fn parse_args() -> Args {
                 scan = true;
                 headless = true;
             }
+            "--nest-headless" => {
+                nest_headless = true;
+                headless = true;
+            }
+            "--nest-stills" => {
+                nest_stills = true;
+                headless = true;
+            }
             "--frames" => {
                 frames = it.next().and_then(|s| s.parse().ok()).unwrap_or(8);
             }
@@ -80,7 +94,7 @@ fn parse_args() -> Args {
             _ => {}
         }
     }
-    if stills || orbit || tick || scan {
+    if stills || orbit || tick || scan || nest_stills {
         if width == 0 {
             width = 1280;
         }
@@ -106,6 +120,8 @@ fn parse_args() -> Args {
         orbit,
         tick,
         scan,
+        nest_headless,
+        nest_stills,
         width,
         height,
     }
@@ -544,6 +560,146 @@ fn run_scan(width: u32, height: u32) -> Result<()> {
     Ok(())
 }
 
+/// N1 ledger. L=3, ΔR=0.08R. Same trench table. No PNG.
+fn run_nest_headless() -> Result<()> {
+    let trench = load_trench()?;
+    let mut ph = Phosphor::even_layers(NEST_N, NEST_LAYERS);
+    ph.light_persist(1.0);
+    anyhow::ensure!(ph.elliptic_only(), "nest stays elliptic");
+    anyhow::ensure!(nest::shell_s_not_folded(&ph), "layer folded into shell_s");
+    anyhow::ensure!(nest::layers_on_radius(&ph, &trench), "mote left its radius");
+    let r = nest::measure(&ph, &trench);
+    anyhow::ensure!(
+        (r.sep_01 - NEST_DELTA_R).abs() < 1e-3,
+        "sep_01={} want {NEST_DELTA_R}",
+        r.sep_01
+    );
+    anyhow::ensure!(
+        (r.sep_12 - NEST_DELTA_R).abs() < 1e-3,
+        "sep_12={} want {NEST_DELTA_R}",
+        r.sep_12
+    );
+    anyhow::ensure!(r.sep_01 > SPLAT_LOCK, "sep_01 {} <= splat", r.sep_01);
+    anyhow::ensure!(r.sep_12 > SPLAT_LOCK, "sep_12 {} <= splat", r.sep_12);
+    let sum = r.energy_sum();
+    anyhow::ensure!(
+        (ph.composed_energy() - sum).abs() < 1e-3,
+        "all {} != sum {sum}",
+        ph.composed_energy()
+    );
+
+    let dir = Path::new("output/nest");
+    std::fs::create_dir_all(dir)?;
+    let energy_path = dir.join("energy.json");
+    std::fs::write(&energy_path, nest::energy_json(r))?;
+    println!("wrote {}", energy_path.display());
+
+    let mut gpu = GpuContext::init_headless().context("init_headless")?;
+    println!("{}", gpu.report());
+    let mut renderer = Renderer::new(&gpu)?;
+    let camera = locked_eye(16.0 / 9.0);
+    let vis = silent_vis();
+    upload_static(&gpu, &mut renderer, &trench)?;
+    renderer.write_hud(&gpu, &[])?;
+    renderer.write_particles(&gpu, &pack_lit(&ph, &trench))?;
+    renderer.render(&mut gpu, &camera, &vis, 0.0, true)?;
+    let stats = renderer.upload_stats();
+    anyhow::ensure!(stats.static_uploads == 1, "nest SU={}", stats.static_uploads);
+    anyhow::ensure!(
+        stats.live_fiber_writes == 0,
+        "nest LF={}",
+        stats.live_fiber_writes
+    );
+    println!(
+        "nest: L={NEST_LAYERS} dR={NEST_DELTA_R}R splat={SPLAT_LOCK}R SU={} LF={}",
+        stats.static_uploads, stats.live_fiber_writes
+    );
+    println!(
+        "sep_01={:.3} sep_12={:.3}   # min |p_ℓ - p_ℓ+1| / R",
+        r.sep_01, r.sep_12
+    );
+    println!(
+        "energy_L0={:.3} energy_L1={:.3} energy_L2={:.3}",
+        r.energy_l0, r.energy_l1, r.energy_l2
+    );
+    Ok(())
+}
+
+/// N1 stills. Same locked eye as 00–03. Glow off. HUD off. LF=0.
+fn run_nest_stills(width: u32, height: u32) -> Result<()> {
+    let trench = load_trench()?;
+    let mut gpu = GpuContext::init_headless_extent(width, height).context("init_headless")?;
+    println!("{}", gpu.report());
+    let mut renderer = Renderer::new(&gpu)?;
+    let vis = silent_vis();
+    let aspect = width as f32 / height.max(1) as f32;
+    let eye = locked_eye(aspect);
+    let graze = trench_eye(aspect, trench.gamma(0.18));
+    upload_static(&gpu, &mut renderer, &trench)?;
+    renderer.write_hud(&gpu, &[])?;
+
+    renderer.write_particles(&gpu, &[])?;
+    grab_png(
+        &mut gpu,
+        &mut renderer,
+        &eye,
+        &vis,
+        0.0,
+        Path::new("output/png/n0_hull.png"),
+    )?;
+
+    for ell in 0..NEST_LAYERS {
+        let mut ph = Phosphor::even_layer(NEST_N, ell);
+        ph.light_persist(1.0);
+        renderer.write_particles(&gpu, &pack_lit(&ph, &trench))?;
+        grab_png(
+            &mut gpu,
+            &mut renderer,
+            &eye,
+            &vis,
+            0.0,
+            Path::new(&format!("output/png/n1_L{ell}.png")),
+        )?;
+    }
+
+    let mut all = Phosphor::even_layers(NEST_N, NEST_LAYERS);
+    all.light_persist(1.0);
+    let e0 = all.layer_energy(0);
+    let e1 = all.layer_energy(1);
+    let e2 = all.layer_energy(2);
+    println!(
+        "n1_all energy L0={e0:.3} L1={e1:.3} L2={e2:.3} sum={:.3}",
+        e0 + e1 + e2
+    );
+    renderer.write_particles(&gpu, &pack_lit(&all, &trench))?;
+    grab_png(
+        &mut gpu,
+        &mut renderer,
+        &eye,
+        &vis,
+        0.0,
+        Path::new("output/png/n1_all.png"),
+    )?;
+    grab_png(
+        &mut gpu,
+        &mut renderer,
+        &graze,
+        &vis,
+        0.0,
+        Path::new("output/png/n1_crop.png"),
+    )?;
+
+    anyhow::ensure!(
+        renderer.upload_stats().static_uploads == 1,
+        "nest stills SU"
+    );
+    anyhow::ensure!(
+        renderer.upload_stats().live_fiber_writes == 0,
+        "nest stills LF"
+    );
+    Ok(())
+}
+
 fn run_orbit(frames: u32, width: u32, height: u32) -> Result<()> {
     let trench = load_trench()?;
     let mut gpu = GpuContext::init_headless_extent(width, height).context("init_headless")?;
@@ -786,6 +942,10 @@ fn main() -> Result<()> {
     let args = parse_args();
     if args.stills {
         run_stills(args.width.max(1280), args.height.max(720))
+    } else if args.nest_stills {
+        run_nest_stills(args.width.max(1280), args.height.max(720))
+    } else if args.nest_headless {
+        run_nest_headless()
     } else if args.scan {
         run_scan(args.width.max(1280), args.height.max(720))
     } else if args.tick {

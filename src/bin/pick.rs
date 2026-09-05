@@ -56,9 +56,10 @@ impl Pick {
         std::fs::write(dir.join("qga_pixel.bin"), dump.to_bytes())?;
         std::fs::write(dir.join("qga_pixel.json"), dump.to_json())?;
         println!(
-            "wrote output/pick/qga_pixel.bin (32 bytes) and qga_pixel.json  section={} field={}",
+            "wrote output/pick/qga_pixel.bin (32 bytes) and qga_pixel.json  section={} field={} layer={}",
             dump.section().name(),
-            dump.field().bit()
+            dump.field().bit(),
+            dump.layer()
         );
         Ok(())
     }
