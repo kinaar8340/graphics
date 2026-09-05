@@ -24,7 +24,7 @@ This is a **Model** and a **Software fact**. It is not a vacuum tube and not a t
 - [x] Phase 2 — two-clock CPU write + persistence tests
 - [x] Phase 3 — offline trench bind; headless 8-frame; then a `demo-tiny`-scale window
 - [x] Phase 4 — closed. Faceplate pass, clock fail (tested: not visible at sculpture distance), gun deferred
-- [x] Phase 5 — sidecar: loopback BER 0 on the dump; `generic_512` package cites `shell_s` + trench identity. HITL not v1. Not a gun.
+- [x] Phase 5 — **v1 closed.** Sidecar: loopback BER 0; `generic_512` (`shell_s=0.5`, trench `746a79b8…`). HITL not v1. Tip `2e1fe9c`. Not a gun.
 - [x] Phase 6 — picker: writes 32-byte `qga_pixel` (`make pick`). Not a second loom.
 
 Hypothesis (two clocks as a picture): **tested, not visible at sculpture distance.** See [docs/TESTIMONY.md](docs/TESTIMONY.md). Splat vs `ε`: [docs/LAYOUT.md](docs/LAYOUT.md).

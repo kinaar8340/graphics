@@ -54,8 +54,21 @@ Do not spend another commit proving the same collapse.
 2. Two-clock write. Clock 0 static / even / feeling. Clock 1 live / odd / visual. Persistence difference must be measurable.  
 3. **Shipped.** Bind + window. Offline trench, 4k elliptic, `pos = γ(shell_s)`. Headless 8-frame: `SU=1`, `LF=0`, `PS=0`, `even=1347.844`, `odd=1872.004`, `both=3219.883`. `demo-tiny`-scale window. Gun off.  
 4. **Closed.** Testimony. Faceplate pass, clock fail, gun deferred. Occupancy + rails + locked tick (`tick.mp4`) did not make clocks a picture. `LF=0`. See [TESTIMONY.md](TESTIMONY.md).  
-5. **Sidecar write.** `docs/PHASE5.md`. `scripts/export_slm_pixel.py` reads `pick --dump` and talks to `vqc_demo` / `flux_trajectoid`. Loopback BER 0 is the gate. Not a window. Not a gun.  
+5. **Closed (v1).** Sidecar write. Loopback BER 0; `generic_512` package (`shell_s=0.5`, trench `746a79b8…`). HITL not v1. Tip `2e1fe9c`. See [PHASE5.md](PHASE5.md). Not a window. Not a gun.  
 6. **Picker (writer).** Sibling binary `make pick`. Emits a 32-byte `QgaPixel` (and JSON). Hemisphere sets \((\theta,\phi)\). Lock-to-4 on. One optional fiber arc. Does not own the faceplate window. Not a Philogb restyle. Not a second loom.
+
+## Freeze (after Phase 5 v1)
+
+| Slot | State |
+|---|---|
+| Faceplate + bind | Frozen |
+| Clocks as a picture | Falsified, do not re-prove |
+| Picker as writer | Frozen |
+| SLM sidecar + loopback + `generic_512` | Frozen |
+| HITL / Pluto / VPL-HW20A | Not v1 |
+| Gun | Off |
+
+`make slm-loopback` / `make slm-export` are the only new verbs. `LF` still 0. Do not open `preview_montage.png`. Do not fold the phase stack into `pick` or `demo`. Do not treat `field=1` as a visible tick. Later unfreeze is one line: load `output/slm/generic_512/` onto a named panel, or `vqc_demo` loopback against a captured projector file of the same 32 bytes — new claim label first.
 
 ## First scene (Phase 3, shipped)
 
