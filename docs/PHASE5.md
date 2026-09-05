@@ -77,3 +77,4 @@ Do not invent a 33rd byte. Do not put RGB in the phase map. Occupancy 256 and \(
 - Turning `LF` on because “the SLM is the gun”
 - Treating `field=1` in the manifest as a visible CRT tick
 - Unlocked continuous \(S^2\) color into phase
+- Sign mask on the stack (\(\psi+\pi\) / nappe / blanking). Paper: [SIGN.md](SIGN.md).

@@ -4,7 +4,7 @@
 
 **Logged.** Tip `6dea5f2` is calibration only. `--webcam` stays off. No pointer mesh. No `LF`. Faceplate does not read `gaze.json`. Scan A does not consume `site`. Nothing else unfreezes.
 
-Faceplate may read `gaze.json` only when you unfreeze **Scan A consumes site**. Webcam stays off. The sidecar may run `step(meas|None, dt)`; the faceplate still does not consume `site`.
+Faceplate may read `gaze.json` only when you unfreeze **Scan A consumes site**. Webcam stays off. The sidecar may run `step(meas|None, dt)`; the faceplate still does not consume `site`. Unmatched samples stay **drop**, not a \(\psi+\pi\) sign flip. Sign masks: [SIGN.md](SIGN.md).
 
 ## Claim
 

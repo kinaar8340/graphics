@@ -80,7 +80,7 @@ Animation A lights even occupancy sites only. Occupancy table, rails, and splat 
 | `vel` | unit plane normal |
 | `pad` | `section().hue()` (0.55 / 0.10 / 0.30 / 0.80) |
 
-The particle shader's four-bin wheel is the witness camera. It is not the store.
+The particle shader's four-bin wheel is the witness camera. It is not the store. \(\psi+\pi\) (Hopf antipode) does not change `rgb_preview`. Phase can see it; intensity cannot. Do not mix that with the feeling cone. See [SIGN.md](SIGN.md).
 
 ## Two clocks
 

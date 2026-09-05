@@ -2,6 +2,7 @@
 """Compose pick --dump with vqc_demo loopback / flux_trajectoid SLM.
 
 No Rust path-dep. No VQC path-dep on qga_gpu. Not a projector. Not a gun.
+Sign mask (antipode ψ+π vs nappe / blanking) is paper: docs/SIGN.md. Not wired.
 """
 
 from __future__ import annotations
