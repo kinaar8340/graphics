@@ -28,7 +28,7 @@ This is a **Model** and a **Software fact**. It is not a vacuum tube and not a t
 - [x] Phase 6 — picker: writes 32-byte `qga_pixel` (`make pick`). Not a second loom.
 - [ ] Animation A — scan head on \(\gamma(s)\). Hypothesis. See [docs/SCAN.md](docs/SCAN.md).
 - [x] Phase 7 — nested ShellCube faceplates. **N1 closed.** Hypothesis tested: not visible in composition. Tip `95175f3`. See [docs/NEST.md](docs/NEST.md).
-- [ ] `vision_tracker` — calibration sidecar. Eyeline lock onto observer \(S^2\). Scan A does not consume `site`. See [docs/VISION.md](docs/VISION.md).
+- [ ] `vision_tracker` — calibration sidecar (`6dea5f2`). Bench `rms_px` is the solver, not a lens. Scan A does not consume `site`. See [docs/VISION.md](docs/VISION.md).
 
 Hypothesis (two clocks as a picture): **tested, not visible at sculpture distance.** Nested layers in composition: **tested, not visible.** See [docs/TESTIMONY.md](docs/TESTIMONY.md), [docs/NEST.md](docs/NEST.md). Splat vs `ε`: [docs/LAYOUT.md](docs/LAYOUT.md).
 

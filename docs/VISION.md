@@ -2,7 +2,7 @@
 
 `vision_tracker` is the sculpture’s eyeline lock onto observer \(S^2\). Device noun, like `qga_pixel`. Not a second gun. Not stacked clear windows. Not an all-seeing global pointer.
 
-**Unfreeze (this commit):** calibration only. Camera → sculpture frame → observer \(S^2\). No runtime draw. `LF` stays 0.
+**Logged.** Tip `6dea5f2` is calibration only. `--webcam` stays off. No pointer mesh. No `LF`. Faceplate does not read `gaze.json`. Scan A does not consume `site`. Nothing else unfreezes.
 
 Faceplate may read `gaze.json` only when you unfreeze **Scan A consumes site**. Until that line exists, calibration is the whole implementation.
 
@@ -10,11 +10,13 @@ Faceplate may read `gaze.json` only when you unfreeze **Scan A consumes site**. 
 
 | Sentence | Label |
 |---|---|
-| A camera can estimate gaze or head pose relative to a calibrated sculpture frame. | Device fact |
+| A camera can estimate gaze or head pose relative to a calibrated sculpture frame. | Device fact (cameras in general) |
 | That pose samples observer \(S^2\); cones and `qga_pixel` already take \((\theta,\phi)\). | Model |
-| A calibrated camera maps a pixel to a ray in the sculpture frame. | Device fact |
+| A calibrated camera maps a pixel to a ray in the sculpture frame. | Device fact (cameras in general) |
 | Viewer position \(E\) samples observer \(S^2\) as \(\hat E\). Default eyeline looks at the origin. | Model |
-| `scripts/vision_tracker.py calibrate` writes `calib.json`. `gaze` writes `{theta,phi,locked,site}`. | **Software fact (landed).** Bench `rms_px=1.03e-4` on six synth hull verts. `trench_sha256=746a79b8…`. |
+| `calibrate` / `gaze` write `calib.json` and `{theta,phi,locked,site}`. Bench `rms_px=1.03e-4` on six **projected** hull verts. | **Software fact of the bench solver**, not of a lens |
+| `gaze --eye-px 640,360` → `site=240`, even, `layer=0`, `persist=0`, `locked=true` | Software fact of the payload |
+| `make track-synth` `uv` is this sculpture’s pose | **Not a device fact** until `uv` comes from a still of that camera |
 | Gaze-driven Scan A head on \(\gamma\), layer 0, `LF=0`, reads as a pointer. | Hypothesis — **not this unfreeze** |
 | Eyeline lock makes the two-clock or radial stack read without a caption. | **Not claimed.** Clocks and N1 already failed at `4.2`. |
 
@@ -92,7 +94,7 @@ output/track/points.json     # 3D–2D pairs
 3. `calibrate` runs `solvePnP` + reprojection RMS. Fail if `rms_px > 2`.
 4. `gaze --eye-px u,v` or `--eye-xyz x,y,z` writes `gaze.json`. `--webcam` is not v1.
 
-Bench path without a live still: `synth-points` projects six hull verts through a known pose so `solvePnP` has a measured `rms_px`. First run: `rms_px=1.03e-4`, \(N=6\), fail bar is \(2.0\). Replace `uv` with clicks from the real top-camera still before claiming a device fact of this lens.
+Bench path without a live still: `synth-points` projects six hull verts through a known pose so `solvePnP` has a measured `rms_px`. First run: `rms_px=1.03e-4`, \(N=6\), fail bar is \(2.0\). That number is a **software fact of the bench solver**, not of a lens. `make track-synth` cannot become a device fact until `uv` comes from a still of that camera. Replace the synthetic `uv` before you treat `calib.json` as that sculpture’s pose.
 
 Rate, later: 30 Hz names the clock; `LF` stays 0.
 

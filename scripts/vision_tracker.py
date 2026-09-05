@@ -167,7 +167,7 @@ def synth_points(out_path: Path, trench_path: Path) -> dict:
         "dist": dist.tolist(),
         "xyz": X.tolist(),
         "uv": uv.tolist(),
-        "note": "synth-points from hull verts; replace uv with top-camera clicks",
+        "note": "bench solver only; replace uv with a still of that camera before treating calib as sculpture pose",
         "vert_index": seen[:6],
     }
     save_json(out_path, payload)
