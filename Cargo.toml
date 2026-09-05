@@ -27,3 +27,7 @@ path = "src/lib.rs"
 [[bin]]
 name = "shellscan"
 path = "src/bin/shellscan.rs"
+
+[[bin]]
+name = "pick"
+path = "src/bin/pick.rs"

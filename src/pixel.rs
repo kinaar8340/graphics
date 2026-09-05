@@ -131,4 +131,64 @@ impl QgaPixel {
         let a = (self.amplitude * self.persist).clamp(0.0, 1.0);
         [base[0] * a, base[1] * a, base[2] * a]
     }
+
+    /// Lock off: interpolate the four hues from the cut, never free RGB.
+    pub fn rgb_preview_mix(self) -> [f32; 3] {
+        if self.offset.abs() < 1e-4 {
+            return scale_rgb([1.0, 0.2, 0.8], self);
+        }
+        let s = self
+            .plane_normal()
+            .normalize_or_zero()
+            .dot(self.field().cone_axis().normalize_or_zero())
+            .abs();
+        let g = std::f32::consts::FRAC_1_SQRT_2;
+        let hyp = [1.0, 0.4, 0.2];
+        let par = [1.0, 0.75, 0.2];
+        let ell = [0.2, 0.6, 1.0];
+        let rgb = if s <= g {
+            lerp3(hyp, par, (s / g).clamp(0.0, 1.0))
+        } else {
+            lerp3(par, ell, ((s - g) / (1.0 - g)).clamp(0.0, 1.0))
+        };
+        scale_rgb(rgb, self)
+    }
+
+    pub fn to_bytes(self) -> [u8; 32] {
+        bytemuck::bytes_of(&self)
+            .try_into()
+            .expect("QgaPixel is 32")
+    }
+
+    pub fn from_bytes(bytes: [u8; 32]) -> Self {
+        *bytemuck::from_bytes(&bytes)
+    }
+
+    pub fn to_json(self) -> String {
+        format!(
+            "{{\"theta\":{:.6},\"phi\":{:.6},\"psi\":{:.6},\"offset\":{:.6},\"amplitude\":{:.6},\"shell_s\":{:.6},\"persist\":{:.6},\"field\":{},\"section\":\"{}\"}}\n",
+            self.theta,
+            self.phi,
+            self.psi,
+            self.offset,
+            self.amplitude,
+            self.shell_s,
+            self.persist,
+            self.field().bit(),
+            self.section().name()
+        )
+    }
+}
+
+fn lerp3(a: [f32; 3], b: [f32; 3], t: f32) -> [f32; 3] {
+    [
+        a[0] + (b[0] - a[0]) * t,
+        a[1] + (b[1] - a[1]) * t,
+        a[2] + (b[2] - a[2]) * t,
+    ]
+}
+
+fn scale_rgb(rgb: [f32; 3], p: QgaPixel) -> [f32; 3] {
+    let a = (p.amplitude * p.persist.max(0.15)).clamp(0.0, 1.0);
+    [rgb[0] * a, rgb[1] * a, rgb[2] * a]
 }

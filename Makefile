@@ -1,4 +1,4 @@
-.PHONY: test spec check export-shell headless demo stills testimony tick
+.PHONY: test spec check export-shell headless demo stills testimony tick pick
 
 test:
 	cargo test
@@ -17,6 +17,10 @@ headless:
 
 demo:
 	cargo run --release --bin shellscan
+
+# Phase 6 writer. Hemisphere → 32-byte qga_pixel. Not the faceplate.
+pick:
+	cargo run --release --bin pick
 
 stills:
 	mkdir -p output/png
