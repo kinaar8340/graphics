@@ -28,6 +28,7 @@ This is a **Model** and a **Software fact**. It is not a vacuum tube and not a t
 - [x] Phase 6 — picker: writes 32-byte `qga_pixel` (`make pick`). Not a second loom.
 - [ ] Animation A — scan head on \(\gamma(s)\). Hypothesis. See [docs/SCAN.md](docs/SCAN.md).
 - [x] Phase 7 — nested ShellCube faceplates. **N1 closed.** Hypothesis tested: not visible in composition. Tip `95175f3`. See [docs/NEST.md](docs/NEST.md).
+- [ ] `vision_tracker` — calibration sidecar. Eyeline lock onto observer \(S^2\). Scan A does not consume `site`. See [docs/VISION.md](docs/VISION.md).
 
 Hypothesis (two clocks as a picture): **tested, not visible at sculpture distance.** Nested layers in composition: **tested, not visible.** See [docs/TESTIMONY.md](docs/TESTIMONY.md), [docs/NEST.md](docs/NEST.md). Splat vs `ε`: [docs/LAYOUT.md](docs/LAYOUT.md).
 
@@ -64,6 +65,9 @@ make testimony     # stills + 30s orbit of 03_both (body, not clocks)
 make pick          # Phase 6 writer: hemisphere → 32-byte qga_pixel (not the faceplate)
 make slm-loopback  # Phase 5 rung 1: recover dump via vqc_demo loopback
 make slm-export    # Phase 5 rung 2: generic_512 package (after loopback)
+make track-synth      # hull verts → output/track/points.json (bench, not a live still)
+make track-calibrate  # solvePnP → output/track/calib.json
+make track-gaze       # EYE=u,v → output/track/gaze.json (not consumed by Scan A)
                    # click hemisphere; L lock-to-4; [ ] shell_s; F field bit (packed, not a picture); E export
                    # cargo run --release --bin pick -- --dump  # no window, writes output/pick/
 ```

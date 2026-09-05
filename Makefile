@@ -1,4 +1,7 @@
-.PHONY: test spec check export-shell headless demo stills testimony tick scan nest-headless nest-stills pick slm-loopback slm-export
+.PHONY: test spec check export-shell headless demo stills testimony tick scan nest-headless nest-stills pick slm-loopback slm-export track-synth track-calibrate track-gaze
+
+TRACK_PY := $(shell test -x .venv/bin/python && echo .venv/bin/python || echo python3)
+EYE ?= 640,360
 
 test:
 	cargo test
@@ -30,6 +33,19 @@ slm-loopback:
 slm-export:
 	cargo run --release --bin pick -- --dump
 	python3 scripts/export_slm_pixel.py --preset generic_512
+
+# vision_tracker. Calibration sidecar. No window. No gun. Scan A does not consume site yet.
+track-synth:
+	mkdir -p output/track
+	$(TRACK_PY) scripts/vision_tracker.py synth-points --points output/track/points.json
+
+track-calibrate:
+	mkdir -p output/track
+	$(TRACK_PY) scripts/vision_tracker.py calibrate --points output/track/points.json
+
+track-gaze:
+	mkdir -p output/track
+	$(TRACK_PY) scripts/vision_tracker.py gaze --eye-px $(EYE)
 
 stills:
 	mkdir -p output/png
