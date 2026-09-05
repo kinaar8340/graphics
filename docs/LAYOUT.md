@@ -65,6 +65,8 @@ Do not path-dep `flux_trajectoid`. The sidecar writes bytes; Rust reads bytes.
 
 Phase 5 v1 is a package directory (`output/slm/generic_512/`), not a sculpture. Do not fold `phase_stack.npy` into `pick` or `demo`. `field` in the SLM manifest is packed metadata, not a visible tick. Do not open `preview_montage.png` as look-dev.
 
+Animation A lights even occupancy sites only. Occupancy table, rails, and splat stay put. Persist assignment does not call the two-clock field write.
+
 `exited` / `pierced` stay out of the 32-byte slot.
 
 ## Map onto `GpuParticle` (lossy, `to_gpu_particle`)

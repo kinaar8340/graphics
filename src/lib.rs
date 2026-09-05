@@ -8,6 +8,7 @@ pub mod capture;
 pub mod clock;
 pub mod convert;
 pub mod pixel;
+pub mod scan;
 pub mod scene;
 pub mod section;
 pub mod trench;

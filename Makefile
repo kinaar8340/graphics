@@ -1,4 +1,4 @@
-.PHONY: test spec check export-shell headless demo stills testimony tick pick slm-loopback slm-export
+.PHONY: test spec check export-shell headless demo stills testimony tick scan pick slm-loopback slm-export
 
 test:
 	cargo test
@@ -34,6 +34,20 @@ slm-export:
 stills:
 	mkdir -p output/png
 	cargo run --release --bin shellscan -- --stills --width 1280 --height 720
+
+# Animation A. Persist peak on even sites. Locked eye + 04 crop. Glow off. HUD off. LF=0.
+scan:
+	mkdir -p output/png/scan_lock output/png/scan_crop output/mp4 output/scan
+	rm -f output/png/scan_lock/frame_*.png output/png/scan_crop/frame_*.png
+	cargo run --release --bin shellscan -- --scan --width 1280 --height 720
+	ffmpeg -y -hide_banner -loglevel error -framerate 30 \
+		-i output/png/scan_lock/frame_%04d.png \
+		-c:v libx264 -pix_fmt yuv420p \
+		output/mp4/scan_lock.mp4
+	ffmpeg -y -hide_banner -loglevel error -framerate 30 \
+		-i output/png/scan_crop/frame_%04d.png \
+		-c:v libx264 -pix_fmt yuv420p \
+		output/mp4/scan_crop.mp4
 
 # Locked-eye 6s tick. Hard cuts. Not both.mp4. Glow off. HUD off. LF=0.
 tick:

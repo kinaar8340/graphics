@@ -67,8 +67,9 @@ Do not spend another commit proving the same collapse.
 | SLM sidecar + loopback + `generic_512` | Frozen |
 | HITL / Pluto / VPL-HW20A | Not v1 |
 | Gun | Off |
+| Animation A (scan head) | Unfrozen — hypothesis. See [SCAN.md](SCAN.md). |
 
-`make slm-loopback` / `make slm-export` are the only new verbs. `LF` still 0. Do not open `preview_montage.png`. Do not fold the phase stack into `pick` or `demo`. Do not treat `field=1` as a visible tick. Later unfreeze is one line: load `output/slm/generic_512/` onto a named panel, or `vqc_demo` loopback against a captured projector file of the same 32 bytes — new claim label first.
+`make scan` is the unfrozen verb. `LF` still 0. Do not open `preview_montage.png`. Do not fold the phase stack into `pick` or `demo`. Do not treat `field=1` as a visible tick. Do not grow \(\varepsilon\), shrink splat, or turn the gun on. B (picker \(\psi\)) and C (two heads) are not this target.
 
 ## First scene (Phase 3, shipped)
 

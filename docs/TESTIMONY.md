@@ -4,7 +4,7 @@
 
 Sculpture distance cannot carry occupancy or rails as a picture. Clocks live in the ledger and, if anywhere on video, in a locked-eye tick. Gun off.
 
-Do not spend another commit proving the same collapse. Phase 6 is a writer of `qga_pixel` records, not a Hopf sculpture. Phase 5 v1 is a package directory, not testimony: do not open `preview_montage.png`, do not fold the phase stack into `pick` or `demo`, do not treat `field=1` as a visible tick.
+Do not spend another commit proving the same collapse. Phase 6 is a writer of `qga_pixel` records, not a Hopf sculpture. Phase 5 v1 is a package directory, not testimony: do not open `preview_montage.png`, do not fold the phase stack into `pick` or `demo`, do not treat `field=1` as a visible tick. Animation A (`docs/SCAN.md`) is a persist peak on field 0, not a clock-stills retry.
 
 Rails were given one honest ε. `RAIL_EPS = 0.02` (top of `0.01R`–`0.02R`). Field 0 is `γ + ε ŷ`, field 1 is `γ + ε ẑ`. World cone axes, not the camera. Occupancy 256 unchanged.
 

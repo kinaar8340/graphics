@@ -7,6 +7,10 @@ use qga_gpu::{
     hud_text, Camera, GpuContext, GpuParticle, HudVert, LineStyle, Renderer, UploadStats,
     VisualState,
 };
+use shellscan::scan::{
+    apply_scan, energy_json, head_index, measure, odd_sites_dark, SCAN_DELTA, SCAN_EVEN_LAP,
+    SCAN_FRAMES, SCAN_I0, SCAN_K_TAIL,
+};
 use shellscan::{
     capture, scene, to_gpu_particle_on, Field, Phosphor, Trench, TwoClock, N_OCCUPANCY,
 };
@@ -30,6 +34,7 @@ struct Args {
     stills: bool,
     orbit: bool,
     tick: bool,
+    scan: bool,
     width: u32,
     height: u32,
 }
@@ -40,6 +45,7 @@ fn parse_args() -> Args {
     let mut stills = false;
     let mut orbit = false;
     let mut tick = false;
+    let mut scan = false;
     let mut width = 0;
     let mut height = 0;
     let mut it = std::env::args().skip(1);
@@ -58,6 +64,10 @@ fn parse_args() -> Args {
                 tick = true;
                 headless = true;
             }
+            "--scan" => {
+                scan = true;
+                headless = true;
+            }
             "--frames" => {
                 frames = it.next().and_then(|s| s.parse().ok()).unwrap_or(8);
             }
@@ -70,7 +80,7 @@ fn parse_args() -> Args {
             _ => {}
         }
     }
-    if stills || orbit || tick {
+    if stills || orbit || tick || scan {
         if width == 0 {
             width = 1280;
         }
@@ -83,6 +93,8 @@ fn parse_args() -> Args {
             900
         } else if tick {
             180
+        } else if scan {
+            SCAN_FRAMES
         } else {
             8
         };
@@ -93,6 +105,7 @@ fn parse_args() -> Args {
         stills,
         orbit,
         tick,
+        scan,
         width,
         height,
     }
@@ -248,11 +261,25 @@ fn grab_png(
     time: f32,
     path: &Path,
 ) -> Result<()> {
+    grab_png_opt(gpu, renderer, camera, vis, time, path, true)
+}
+
+fn grab_png_opt(
+    gpu: &mut GpuContext,
+    renderer: &mut Renderer,
+    camera: &Camera,
+    vis: &VisualState,
+    time: f32,
+    path: &Path,
+    log: bool,
+) -> Result<()> {
     let frame = renderer
         .render(gpu, camera, vis, time, true)?
         .context("capture empty")?;
     capture::save_png(path, frame.width, frame.height, &frame.bgra)?;
-    println!("wrote {} {}x{}", path.display(), frame.width, frame.height);
+    if log {
+        println!("wrote {} {}x{}", path.display(), frame.width, frame.height);
+    }
     Ok(())
 }
 
@@ -393,6 +420,127 @@ fn run_tick(width: u32, height: u32) -> Result<()> {
         "tick must keep LF=0"
     );
     println!("tick frames={n} static_uploads=1 live_fiber_writes=0");
+    Ok(())
+}
+
+/// Animation A. One persist peak on even occupancy sites. LF=0. Glow off. HUD off.
+fn run_scan(width: u32, height: u32) -> Result<()> {
+    let trench = load_trench()?;
+    let mut ph = Phosphor::on_trench(N_OCCUPANCY);
+    anyhow::ensure!(ph.pixels.len() == N_OCCUPANCY, "occupancy table frozen at 256");
+    anyhow::ensure!(ph.elliptic_only(), "scan stays elliptic");
+
+    let mut rows = Vec::with_capacity(SCAN_FRAMES as usize);
+    for t in 0..SCAN_FRAMES {
+        let hi = head_index(t, SCAN_I0);
+        apply_scan(&mut ph, hi);
+        anyhow::ensure!(ph.elliptic_only(), "section flipped at t={t}");
+        anyhow::ensure!(odd_sites_dark(&ph), "odd sites lit at t={t}");
+        let p = ph.pixels[hi];
+        anyhow::ensure!(
+            (p.shell_s - hi as f32 / N_OCCUPANCY as f32).abs() < 1e-5,
+            "head shell_s left occupancy sample"
+        );
+        let g = trench.gamma(p.shell_s) + Field::Even.cone_axis() * shellscan::RAIL_EPS;
+        anyhow::ensure!(
+            p.bind_shell(&trench).distance(g) < 1e-5,
+            "head left the trench"
+        );
+        let e = measure(&ph, t, hi, SCAN_K_TAIL);
+        anyhow::ensure!(e.other_frac() < 1e-4, "energy_other/total={}", e.other_frac());
+        anyhow::ensure!(
+            e.peak_is_peak(SCAN_K_TAIL),
+            "peak is not a peak head={} tail/K={}",
+            e.energy_head,
+            e.energy_tail / SCAN_K_TAIL as f32
+        );
+        rows.push(e);
+    }
+    let lap = SCAN_EVEN_LAP as usize;
+    anyhow::ensure!(rows[0].head_i == rows[lap].head_i);
+    anyhow::ensure!((rows[0].energy_head - rows[lap].energy_head).abs() < 1e-5);
+    anyhow::ensure!((rows[0].energy_tail - rows[lap].energy_tail).abs() < 1e-5);
+
+    let energy_dir = Path::new("output/scan");
+    std::fs::create_dir_all(energy_dir)?;
+    let energy_path = energy_dir.join("energy.json");
+    std::fs::write(&energy_path, energy_json(&rows))?;
+    println!("wrote {}", energy_path.display());
+
+    let e0 = rows[0];
+    println!(
+        "scan energy N={N_OCCUPANCY} K={SCAN_K_TAIL} delta={SCAN_DELTA}"
+    );
+    for e in rows.iter().take(8) {
+        println!(
+            " t={:<3} head_i={:<3} head_s={:.6} energy_head={:.3} energy_tail={:.3} energy_other={:.3}",
+            e.t, e.head_i, e.head_s, e.energy_head, e.energy_tail, e.energy_other
+        );
+    }
+
+    let mut gpu = GpuContext::init_headless_extent(width, height).context("init_headless")?;
+    println!("{}", gpu.report());
+    let mut renderer = Renderer::new(&gpu)?;
+    let vis = silent_vis();
+    let aspect = width as f32 / height.max(1) as f32;
+    let eye = locked_eye(aspect);
+    let graze = trench_eye(aspect, trench.gamma(0.18));
+    upload_static(&gpu, &mut renderer, &trench)?;
+    renderer.write_hud(&gpu, &[])?;
+
+    let lock_dir = Path::new("output/png/scan_lock");
+    let crop_dir = Path::new("output/png/scan_crop");
+    std::fs::create_dir_all(lock_dir)?;
+    std::fs::create_dir_all(crop_dir)?;
+
+    for t in 0..SCAN_FRAMES {
+        let hi = head_index(t, SCAN_I0);
+        apply_scan(&mut ph, hi);
+        renderer.write_particles(&gpu, &pack_lit(&ph, &trench))?;
+        let log = t % 32 == 0 || t + 1 == SCAN_FRAMES;
+        grab_png_opt(
+            &mut gpu,
+            &mut renderer,
+            &eye,
+            &vis,
+            0.0,
+            &lock_dir.join(format!("frame_{:04}.png", t)),
+            log,
+        )?;
+        grab_png_opt(
+            &mut gpu,
+            &mut renderer,
+            &graze,
+            &vis,
+            0.0,
+            &crop_dir.join(format!("frame_{:04}.png", t)),
+            log,
+        )?;
+        if log {
+            println!("scan frame {t}/{}", SCAN_FRAMES - 1);
+        }
+    }
+
+    let stats = renderer.upload_stats();
+    anyhow::ensure!(stats.static_uploads == 1, "scan SU={}", stats.static_uploads);
+    anyhow::ensure!(
+        stats.live_fiber_writes == 0,
+        "scan LF={}",
+        stats.live_fiber_writes
+    );
+    anyhow::ensure!(
+        stats.particle_skipped == 0,
+        "scan PS={} (persist must dirty every frame)",
+        stats.particle_skipped
+    );
+    println!(
+        "scan: SU={} LF={} PS={} N={N_OCCUPANCY} K={SCAN_K_TAIL} delta={SCAN_DELTA}",
+        stats.static_uploads, stats.live_fiber_writes, stats.particle_skipped
+    );
+    println!(
+        "head_i={}  head_s={:.6}  energy_head={:.3}  energy_tail={:.3}  energy_other≈{:.3}",
+        e0.head_i, e0.head_s, e0.energy_head, e0.energy_tail, e0.energy_other
+    );
     Ok(())
 }
 
@@ -638,6 +786,8 @@ fn main() -> Result<()> {
     let args = parse_args();
     if args.stills {
         run_stills(args.width.max(1280), args.height.max(720))
+    } else if args.scan {
+        run_scan(args.width.max(1280), args.height.max(720))
     } else if args.tick {
         run_tick(args.width.max(1280), args.height.max(720))
     } else if args.orbit {
