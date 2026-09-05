@@ -27,9 +27,9 @@ This is a **Model** and a **Software fact**. It is not a vacuum tube and not a t
 - [x] Phase 5 — **v1 closed.** Sidecar: loopback BER 0; `generic_512` (`shell_s=0.5`, trench `746a79b8…`). HITL not v1. Tip `2e1fe9c`. Not a gun.
 - [x] Phase 6 — picker: writes 32-byte `qga_pixel` (`make pick`). Not a second loom.
 - [ ] Animation A — scan head on \(\gamma(s)\). Hypothesis. See [docs/SCAN.md](docs/SCAN.md).
-- [x] Phase 7 — nested ShellCube faceplates. **N1 closed.** Ledger pass (`sep=0.080`). Picture fail (thicker necklace / ribbon). \(\Delta R=0.08R\) lost. See [docs/NEST.md](docs/NEST.md).
+- [x] Phase 7 — nested ShellCube faceplates. **N1 closed.** Hypothesis tested: not visible in composition. Tip `95175f3`. See [docs/NEST.md](docs/NEST.md).
 
-Hypothesis (two clocks as a picture): **tested, not visible at sculpture distance.** See [docs/TESTIMONY.md](docs/TESTIMONY.md). Splat vs `ε`: [docs/LAYOUT.md](docs/LAYOUT.md).
+Hypothesis (two clocks as a picture): **tested, not visible at sculpture distance.** Nested layers in composition: **tested, not visible.** See [docs/TESTIMONY.md](docs/TESTIMONY.md), [docs/NEST.md](docs/NEST.md). Splat vs `ε`: [docs/LAYOUT.md](docs/LAYOUT.md).
 
 ## `qga_pixel`
 

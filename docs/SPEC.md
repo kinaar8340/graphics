@@ -34,8 +34,8 @@ If a sentence cannot wear one of those four tags, it does not belong here.
 \text{observer } S^2 \to \text{dual cones} \to \text{inverse-Hopf loom} \to \text{qga\_pixel field on a trajectoid shell} \to \text{two-clock persistence} \to \text{eye}
 \]
 
-Keep: faceplate, `qga_pixel` record, occupancy 256, rails `ε=0.02R` as data.  
-Drop: gun on, more stills, bigger `ε`, smaller splat, Philogb gallery, clocks as a picture.  
+Keep: faceplate, `qga_pixel` record, occupancy 256, rails `ε=0.02R` as data, packed `layer:8` as bits.  
+Drop: gun on, more stills, bigger `ε`, bigger \(\Delta R\), smaller splat, Philogb gallery, clocks as a picture, nested stack as a picture.  
 Do not spend another commit proving the same collapse.
 
 ## Palette (do not invent a fifth)
@@ -56,7 +56,7 @@ Do not spend another commit proving the same collapse.
 4. **Closed.** Testimony. Faceplate pass, clock fail, gun deferred. Occupancy + rails + locked tick (`tick.mp4`) did not make clocks a picture. `LF=0`. See [TESTIMONY.md](TESTIMONY.md).  
 5. **Closed (v1).** Sidecar write. Loopback BER 0; `generic_512` package (`shell_s=0.5`, trench `746a79b8…`). HITL not v1. Tip `2e1fe9c`. See [PHASE5.md](PHASE5.md). Not a window. Not a gun.  
 6. **Picker (writer).** Sibling binary `make pick`. Emits a 32-byte `QgaPixel` (and JSON). Hemisphere sets \((\theta,\phi)\). Lock-to-4 on. One optional fiber arc. Does not own the faceplate window. Not a Philogb restyle. Not a second loom.  
-7. **N1 closed.** Nested faceplates. Ledger pass (`sep=0.080`, energy 256×3). Picture fail: thicker necklace / one ribbon. \(\Delta R=0.08R\) lost as a picture. Do not lower it. See [NEST.md](NEST.md).
+7. **Closed.** Nested faceplates. Ledger pass (`sep=0.080`, energy \(256+256+256\)). Hypothesis **tested: not visible in composition.** Same collapse as rails, now in radius. Packed `layer:8` is true, not a draw license. Tip `95175f3`. See [NEST.md](NEST.md).
 
 ## Freeze (after Phase 5 v1)
 
@@ -69,9 +69,9 @@ Do not spend another commit proving the same collapse.
 | HITL / Pluto / VPL-HW20A | Not v1 |
 | Gun | Off |
 | Animation A (scan head) | Unfrozen — hypothesis. See [SCAN.md](SCAN.md). |
-| Nested shells / ShellCube | **N1 closed.** Ledger pass, picture fail. Do not lower \(\Delta R\). See [NEST.md](NEST.md). |
+| Nested shells / ShellCube | Falsified in composition, do not re-prove. Packed `layer:8` stays. See [NEST.md](NEST.md). |
 
-`make scan` remains the unfrozen animation. N1 nested stack is a ledger (packed `layer`, \(\Delta R=0.08R\)) and a failed picture. Do not lower \(\Delta R\). Do not shrink splat. Do not add shells 3…255. Do not grow a 33rd byte. `LF` still 0. Do not open `preview_montage.png`. Do not fold the phase stack into `pick` or `demo`. Do not treat `field=1` as a visible tick. Do not grow \(\varepsilon\) or turn the gun on. B (picker \(\psi\)) and C (two heads) are not this target.
+`make scan` is the only unfrozen verb: one head on layer 0, other layers dark. N1 is a ledger, not a radial graphic. Do not raise \(\Delta R\). Do not shrink splat. Do not instance more shells. Do not grow a 33rd byte. `LF` still 0. Do not open `preview_montage.png`. Do not fold the phase stack into `pick` or `demo`. Do not treat `field=1` as a visible tick. Do not grow \(\varepsilon\) or turn the gun on. B (picker \(\psi\)) and C (two heads) are not this target. Nothing else unfreezes.
 
 ## First scene (Phase 3, shipped)
 

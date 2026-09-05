@@ -105,4 +105,4 @@ Stop and re-freeze if any of these:
 
 Pass is narrow: lock view shows a traveling bright on the scribble; crop shows a comet on the trench. Then animation A is a software fact plus a weak hypothesis pass. Next would be named separately (B is picker-only \(\psi\); C is two heads). Not this target.
 
-Nested shells ([NEST.md](NEST.md)) N1: packed `layer` exists; the stack did not read as three curves. Scan A still walks layer 0 only. Do not chase three heads.
+Nested shells ([NEST.md](NEST.md)): **tested, not visible in composition.** Scan A’s legal stage is one head on layer 0, other layers dark. Packed `layer:8` is not a draw license. Do not chase three heads.

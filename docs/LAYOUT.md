@@ -59,7 +59,7 @@ Motes that leave the trench are a bug.
 
 **Splat vs ε (Software fact).** `RAIL_EPS = 0.02` (units of shell radius R ≈ 1). On `04_trench` the witness particle splat at persist=1 is larger than `0.02R`, so the rail slot is not air in the picture. Do not shrink splat radius to flatter the Model. Do not grow ε past this until it reads as two meshes.
 
-Splat radius at the locked eye (distance \(4.2\), aperture \(1\), head mass \(1\)): \(\mathrm{mix}(0.018,0.072,0.5)\cdot 0.70 = 0.0315R\). Nested \(\Delta R=0.08R\) must exceed that number or layers collapse the same way. Packed `layer:8`. \(L=3\) N1. See [NEST.md](NEST.md).
+Splat radius at the locked eye (distance \(4.2\), aperture \(1\), head mass \(1\)): \(\mathrm{mix}(0.018,0.072,0.5)\cdot 0.70 = 0.0315R\). Nested \(\Delta R=0.08R\) exceeds splat in the ledger and still composes as one ribbon. Packed `layer:8` is true, not a draw license. Do not raise \(\Delta R\). Do not shrink splat. See [NEST.md](NEST.md).
 
 Occupancy and rails stay **faceplate-side** (`N_OCCUPANCY=256`, `ε=0.02R`). A Phase 6 picker may export the field bit; it does not own the trench.
 
