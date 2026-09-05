@@ -1,4 +1,4 @@
-.PHONY: test spec check export-shell headless demo stills testimony tick pick
+.PHONY: test spec check export-shell headless demo stills testimony tick pick slm-loopback slm-export
 
 test:
 	cargo test
@@ -21,6 +21,15 @@ demo:
 # Phase 6 writer. Hemisphere → 32-byte qga_pixel. Not the faceplate.
 pick:
 	cargo run --release --bin pick
+
+# Phase 5 sidecar. Reads output/pick/qga_pixel.bin. Not a window. Not a gun.
+slm-loopback:
+	cargo run --release --bin pick -- --dump
+	python3 scripts/export_slm_pixel.py --loopback-only
+
+slm-export:
+	cargo run --release --bin pick -- --dump
+	python3 scripts/export_slm_pixel.py --preset generic_512
 
 stills:
 	mkdir -p output/png
