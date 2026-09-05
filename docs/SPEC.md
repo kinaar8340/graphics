@@ -35,8 +35,8 @@ If a sentence cannot wear one of those four tags, it does not belong here.
 \]
 
 Keep: faceplate, `qga_pixel` record, occupancy 256, rails `ε=0.02R` as data, packed `layer:8` as bits.  
-Drop: gun on, more stills, bigger `ε`, bigger \(\Delta R\), smaller splat, Philogb gallery, clocks as a picture, nested stack as a picture.  
-Do not spend another commit proving the same collapse.
+Drop: gun on, more stills, bigger `ε`, bigger \(\Delta R\), smaller splat, Philogb gallery, clocks as a picture, nested stack as a picture, four flux kinds composited on \(\gamma\).  
+Do not spend another commit proving the same collapse. The loom clip is the elliptic cell of Fig 6.1. Clone four isolated presets in `qga_gpu`, not on this faceplate. See [ATLAS.md](ATLAS.md).
 
 ## Palette (do not invent a fifth)
 
@@ -72,8 +72,9 @@ Do not spend another commit proving the same collapse.
 | Nested shells / ShellCube | Falsified in composition, do not re-prove. Packed `layer:8` stays. See [NEST.md](NEST.md). |
 | `vision_tracker` | Calibration + well `step()` in the sidecar. Bench RMS is the solver, not a lens. Scan A does not consume `site`. See [VISION.md](VISION.md). |
 | Sign / antipode mask | Wired on SLM seed (`--mask`). Loopback unmasked. Faceplate does not draw it. See [SIGN.md](SIGN.md). |
+| Fig 6.1 four-preset clone | Paper in `qga_gpu`, not this crate. Faceplate stays elliptic. See [ATLAS.md](ATLAS.md). |
 
-`make scan` is the only unfrozen faceplate verb: one head on layer 0, other layers dark. Tracker writes `calib.json` / `gaze.json`; the faceplate does not read them. `--webcam` stays off. Do not fold `gaze.json` into `pick` or `demo`. N1 is a ledger, not a radial graphic. Do not raise \(\Delta R\). Do not shrink splat. Do not instance more shells. Do not grow a 33rd byte. `LF` still 0. Do not open `preview_montage.png`. Do not fold the phase stack into `pick` or `demo`. Do not treat `field=1` as a visible tick. Do not grow \(\varepsilon\) or turn the gun on. B (picker \(\psi\)) and C (two heads) are not this target. Nothing else unfreezes.
+`make scan` is the only unfrozen faceplate verb: one head on layer 0, other layers dark. Tracker writes `calib.json` / `gaze.json`; the faceplate does not read them. `--webcam` stays off. Do not fold `gaze.json` into `pick` or `demo`. N1 is a ledger, not a radial graphic. Do not raise \(\Delta R\). Do not shrink splat. Do not instance more shells. Do not grow a 33rd byte. `LF` still 0. Do not open `preview_montage.png`. Do not fold the phase stack into `pick` or `demo`. Do not treat `field=1` as a visible tick. Do not grow \(\varepsilon\) or turn the gun on. B (picker \(\psi\)) and C (two heads) are not this target. Fig 6.1 four-preset clone lives in `qga_gpu`, not here. Faceplate stays elliptic. Nothing else unfreezes.
 
 ## First scene (Phase 3, shipped)
 

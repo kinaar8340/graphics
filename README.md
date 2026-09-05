@@ -42,10 +42,11 @@ Tip of the sign-mask fact: `c5c5095`. Working rule: unfreeze is one labeled sent
 | Scan A consumes `gaze.site` | Frozen |
 | Gun / `LF` | Off |
 | HITL / named panel | Not v1 |
+| Fig 6.1 four-preset clone | Paper in `qga_gpu`. Faceplate stays elliptic. [docs/ATLAS.md](docs/ATLAS.md) |
 
 Splat at \(4.2\), persist \(=1\): \(0.0315R\). Rails \(0.02R\) and \(\Delta R=0.08R\) both lost as pictures.
 
-Do not: Scan A consume `site`, HITL Pluto, nested draw, `LF`, stacked clear windows, wetware pine in `demo`.
+Do not: Scan A consume `site`, HITL Pluto, nested draw, `LF`, stacked clear windows, wetware pine in `demo`, four flux kinds on one trench.
 
 ## Status
 
@@ -60,6 +61,7 @@ Do not: Scan A consume `site`, HITL Pluto, nested draw, `LF`, stacked clear wind
 - [x] N1 — three confocal trenches, ledger pass, composition fail. [docs/NEST.md](docs/NEST.md)
 - [ ] `vision_tracker` — real lens \(K\) + still. Well is specified. Scan A does not consume `site`. [docs/VISION.md](docs/VISION.md)
 - [x] Sign mask — `--mask {none,antipode,blank,nappe}` on the SLM seed. [docs/SIGN.md](docs/SIGN.md)
+- [ ] Fig 6.1 atlas — four isolated loom presets in `qga_gpu`, not a composition window on \(\gamma\). [docs/ATLAS.md](docs/ATLAS.md)
 
 End goal compatible with the freeze: a pipeline that emits a drive signal (record → dump → phase package → later a named panel / glass). Not a single Vulkan window that is a 4D OAM crystal ball.
 
